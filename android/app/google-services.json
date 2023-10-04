@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "786169781124",
+    "project_id": "hospital-staff",
+    "storage_bucket": "hospital-staff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786169781124:android:6f0a422766fb2e7a479bd1",
+        "android_client_info": {
+          "package_name": "com.example.hospital_staff_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFT9d_xSWJ0U5iNznK5qPvAi8yJ2jPhRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
