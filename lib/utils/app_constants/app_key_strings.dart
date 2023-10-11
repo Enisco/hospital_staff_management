@@ -1,5 +1,4 @@
 class AppKeyStrings {
-  static String ownTheCity = 'Own The City';
   static String skip = 'Skip';
   static String recordToponym = 'Record a Toponym';
   static String myPoints = 'My Points';

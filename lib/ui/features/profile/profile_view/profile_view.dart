@@ -119,7 +119,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                               children: [
                                 CustomSpacer(5),
                                 Text(
-                                  "${_controller.myAccountData.city}, ${_controller.myAccountData.country!.substring(_controller.myAccountData.country!.length - 7)}",
+                                  "${_controller.myAccountData.fullName}",
                                   style: TextStyle(
                                     color: Colors.purple.shade300,
                                     fontSize: 13,
@@ -171,17 +171,6 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                                                   ),
                                                 ),
                                                 CustomSpacer(8),
-                                                Text(
-                                                  _controller
-                                                      .myAccountData.totalPoints
-                                                      .toString(),
-                                                  style: AppStyles
-                                                      .regularStringStyle(
-                                                    25,
-                                                    Colors.amber.shade700,
-                                                  ),
-                                                ),
-                                                CustomSpacer(12),
                                               ],
                                             ),
                                           ),
@@ -208,94 +197,6 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                                               ),
                                             ),
                                             CustomSpacer(25),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                SizedBox(
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                        _controller
-                                                            .myAccountData
-                                                            .totalToponymsRecorded
-                                                            .toString(),
-                                                        style: AppStyles
-                                                            .regularStringStyle(
-                                                          30,
-                                                          AppColors.black,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        "  Total  ",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: AppStyles
-                                                            .regularStringStyle(
-                                                          11,
-                                                          Colors.blue.shade800,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                        _controller
-                                                            .myAccountData
-                                                            .naturalToponymsRecorded
-                                                            .toString(),
-                                                        style: AppStyles
-                                                            .regularStringStyle(
-                                                          30,
-                                                          AppColors.black,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        " Natural ",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: AppStyles
-                                                            .regularStringStyle(
-                                                          11,
-                                                          Colors.green.shade800,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                        _controller
-                                                            .myAccountData
-                                                            .artificialToponymsRecorded
-                                                            .toString(),
-                                                        style: AppStyles
-                                                            .regularStringStyle(
-                                                          30,
-                                                          AppColors.black,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        "Artificial",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: AppStyles
-                                                            .regularStringStyle(
-                                                          11,
-                                                          Colors.red.shade800,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            CustomSpacer(20),
                                           ],
                                         ),
                                       )

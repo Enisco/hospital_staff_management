@@ -29,8 +29,9 @@ class HomepageController extends GetxController {
 
   /// Format date string to datetime format
   String formatToDateTime(String dateString) {
-    DateTime tempDate =
-        DateFormat("EEE, MMM d, yyyy hh:mm aaa").parse(dateString);
+    DateTime tempDate = DateFormat("EEE, MMM d, yyyy hh:mm aaa").parse(
+      dateString,
+    );
     String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(tempDate);
     print('formattedDate = $formattedDate');
     return formattedDate;

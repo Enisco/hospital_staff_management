@@ -1,13 +1,9 @@
 // ignore_for_file: avoid_print
 
-import 'dart:convert';
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:hospital_staff_management/app/helpers/sharedprefs.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
-import 'package:hospital_staff_management/ui/features/create_account/create_account_model/create_account_model.dart';
-import 'package:hospital_staff_management/ui/shared/global_variables.dart';
+import 'package:hospital_staff_management/ui/features/create_account/create_account_model/account_models.dart';
 
 var log = getLogger('ProfileController');
 
@@ -16,7 +12,7 @@ class ProfileController extends GetxController {
 
   bool detailsLoaded = false;
   String profileImageLink = ' ';
-  UserAccountModel myAccountData = UserAccountModel();
+  StaffAccountModel myAccountData = StaffAccountModel();
 
   getMyProfileData() async {
     await retrieveSavedProfileImageLink();
@@ -30,19 +26,19 @@ class ProfileController extends GetxController {
   }
 
   Future<void> getMyProfileDataFromDb() async {
-    final getDataRef = FirebaseDatabase.instance.ref();
-    final getDataSnapshot = await getDataRef
-        .child('user_details/${GlobalVariables.myUsername}')
-        .get();
+    // final getDataRef = FirebaseDatabase.instance.ref();
+    // final getDataSnapshot = await getDataRef
+    //     .child('user_details/${GlobalVariables.myUsername}')
+    //     .get();
 
-    if (getDataSnapshot.exists) {
-      print("User exists: ${getDataSnapshot.value}");
+    // if (getDataSnapshot.exists) {
+    //   print("User exists: ${getDataSnapshot.value}");
 
-      UserAccountModel userAccountModel = userAccountModelFromJson(
-          jsonEncode(getDataSnapshot.value).toString());
-      myAccountData = userAccountModel;
-      detailsLoaded = true;
-      update();
-    }
+    //   UserAccountModel userAccountModel = userAccountModelFromJson(
+    //       jsonEncode(getDataSnapshot.value).toString());
+    //   myAccountData = userAccountModel;
+    //   detailsLoaded = true;
+    //   update();
+    // }
   }
 }

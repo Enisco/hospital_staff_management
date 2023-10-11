@@ -49,10 +49,18 @@ class _SplashScreenState extends State<SplashScreen>
         sleep(const Duration(milliseconds: 200));
 
         bool accountExisting;
-        String existingUsername = await getSharedPrefsSavedString("username");
+        String existingUsername = await getSharedPrefsSavedString("myUsername");
         log.w('existingUsername: $existingUsername');
         if (existingUsername != '') {
           GlobalVariables.myUsername = existingUsername;
+
+          if (existingUsername.contains("admin") == true) {
+            GlobalVariables.accountType = "admin";
+            saveSharedPrefsStringValue("accountType", "admin");
+          } else {
+            GlobalVariables.accountType = "staff";
+            saveSharedPrefsStringValue("accountType", "staff");
+          }
           accountExisting = true;
           log.wtf('GlobalVariables.myUsername: ${GlobalVariables.myUsername}');
         } else {

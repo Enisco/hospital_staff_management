@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/app/services/navigation_service.dart';
 import 'package:hospital_staff_management/ui/features/create_account/login_views/signin_user_view.dart';
@@ -21,19 +22,23 @@ class AppRouter {
       /// App Pages
       GoRoute(
         path: '/homepageView',
-        builder: (context, state) => const HomepageView(),
+        pageBuilder: (context, state) => CustomNormalTransition(
+            child: const HomepageView(), key: state.pageKey),
       ),
       GoRoute(
         path: '/recordPageView',
-        builder: (context, state) => const RecordPageView(),
+        pageBuilder: (context, state) => CustomNormalTransition(
+            child: const RecordPageView(), key: state.pageKey),
       ),
       GoRoute(
         path: '/profilePageView',
-        builder: (context, state) => const ProfilePageView(),
+        pageBuilder: (context, state) => CustomNormalTransition(
+            child: const ProfilePageView(), key: state.pageKey),
       ),
       GoRoute(
         path: '/activityPageView',
-        builder: (context, state) => const ActivityPageView(),
+        pageBuilder: (context, state) => CustomNormalTransition(
+            child: const ActivityPageView(), key: state.pageKey),
       ),
       //
       GoRoute(
@@ -42,4 +47,15 @@ class AppRouter {
       ),
     ],
   );
+}
+
+class CustomNormalTransition extends CustomTransitionPage {
+  CustomNormalTransition({required LocalKey key, required Widget child})
+      : super(
+          key: key,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              FadeTransition(opacity: animation, child: child),
+          transitionDuration: const Duration(milliseconds: 0),
+          child: child,
+        );
 }

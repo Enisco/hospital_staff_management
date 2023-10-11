@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -5,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hospital_staff_management/app/helpers/sharedprefs.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
-import 'package:hospital_staff_management/ui/features/create_account/create_account_model/create_account_model.dart';
+import 'package:hospital_staff_management/ui/features/create_account/create_account_model/account_models.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 
 var log = getLogger('CreateUserController');
@@ -43,14 +46,11 @@ class LoginController extends GetxController {
     context.push('/SignInView');
   }
 
-  // void gotoHomepage(BuildContext context) async {
-  //   await saveSharedPrefsStringValue(
-  //       "username", usernameController.text.trim());
-  //   await saveSharedPrefsStringValue("profileImageLink", imageUrl!);
-  //   log.d('Going to homepage page');
-  //   resetValues();
-  //   context.go('/homepageView');
-  // }
+  void gotoHomepage(BuildContext context) {
+    log.d('Going to homepage page');
+    resetValues();
+    context.go('/homepageView');
+  }
 
   void attemptToSignInUser(BuildContext context) {
     log.d('attemptToSignInUser . . .');
@@ -61,10 +61,15 @@ class LoginController extends GetxController {
         passwordController.text.trim().isNotEmpty &&
         !passwordController.text.trim().contains(" ")) {
       log.d('signing in user . . .');
+      String enteredUsername = usernameController.text.trim();
       showLoading = true;
       errMessage = '';
       update();
-      checkIfAdminExistsForSignIn(context);
+      if (enteredUsername.contains("admin") == true) {
+        checkIfAdminExistsForSignIn(context);
+      } else {
+        checkIfStaffExistsForSignIn(context);
+      }
     } else {
       errMessage = 'All fields must be filled, and with no spaces';
       log.d("Errormessage: $errMessage");
@@ -79,16 +84,20 @@ class LoginController extends GetxController {
     final snapshot = await ref.child(usernameController.text.trim()).get();
     if (snapshot.exists) {
       log.d("User exists: ${snapshot.value}");
-      AdminLoginModel adminLoginData =
-          adminLoginModelFromJson(jsonEncode(snapshot.value).toString());
+      AdminAccountModel adminLoginData =
+          adminAccountModelFromJson(jsonEncode(snapshot.value).toString());
       log.d(
           "adminLoginData: ${adminLoginData.toJson()} \nPassword Existing: ${adminLoginData.password}");
       if (adminLoginData.password == passwordController.text.trim()) {
         showLoading = false;
         update();
-        GlobalVariables.myUsername = "Admin 001";
-        log.d("GlobalVariables.myUsername: ${GlobalVariables.myUsername}");
-        // context.pushReplacement('/updateNewAccountView');
+        GlobalVariables.myUsername = usernameController.text.trim();
+        log.d("GlobalVariables Username: ${GlobalVariables.myUsername}");
+        GlobalVariables.accountType = "admin";
+        saveSharedPrefsStringValue(
+            "myUsername", usernameController.text.trim());
+        saveSharedPrefsStringValue("accountType", "admin");
+        log.wtf("Logged in as ${GlobalVariables.accountType}");
         log.wtf("Logged in");
       } else {
         log.d('Password does not match.');
@@ -111,16 +120,22 @@ class LoginController extends GetxController {
         await ref.child('staffs/${usernameController.text.trim()}').get();
     if (snapshot.exists) {
       log.d("User exists: ${snapshot.value}");
-      UserAccountModel userAccountModel =
-          userAccountModelFromJson(jsonEncode(snapshot.value).toString());
+      StaffAccountModel userAccountModel = staffAccountModelFromJson(
+        jsonEncode(snapshot.value).toString(),
+      );
       log.d(
           "UserAccountModel: ${userAccountModel.toJson()} \nPassword Existing: ${userAccountModel.password}");
       if (userAccountModel.password == passwordController.text.trim()) {
         showLoading = false;
         update();
         GlobalVariables.myUsername = usernameController.text.trim();
-        log.d("GlobalVariables.myUsername: ${GlobalVariables.myUsername}");
-        // context.pushReplacement('/updateNewAccountView');
+        GlobalVariables.accountType = "staff";
+        log.d("GlobalVariables Username: ${GlobalVariables.myUsername}");
+        saveSharedPrefsStringValue(
+            "myUsername", usernameController.text.trim());
+        saveSharedPrefsStringValue("accountType", "staff");
+        gotoHomepage(context);
+        log.wtf("Logged in as ${GlobalVariables.accountType}");
       } else {
         log.d('Password does not match.');
         errMessage = "Error! username or password incorrect";

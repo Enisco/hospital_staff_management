@@ -19,7 +19,7 @@ class AppColors {
 
   static Color regularGray = fromHex('#28252021');
 
-  static Color kPrimaryColor = Colors.blueAccent;
+  static Color kPrimaryColor = fromHex("#02055A");
 
   static Color anotherLightGray = fromHex("#D3DDE7");
 

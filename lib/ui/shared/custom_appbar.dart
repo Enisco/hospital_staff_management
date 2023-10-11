@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
-import 'package:hospital_staff_management/utils/app_constants/app_key_strings.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_styles.dart';
 import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
 
@@ -19,7 +18,7 @@ class CustomAppbar extends StatelessWidget {
       color: appbarColor ?? AppColors.kPrimaryColor,
       child: Center(
         child: Text(
-          title ?? AppKeyStrings.ownTheCity,
+          title ?? "HSMS",
           style: AppStyles.regularStringStyle(
               16, titleColor ?? AppColors.plainWhite),
         ),

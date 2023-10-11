@@ -8,7 +8,9 @@ import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navbar.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/homepage_loaded.dart';
+import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
+import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
 
 var log = getLogger('HomepageView');
 
@@ -48,17 +50,13 @@ class _HomepageViewState extends State<HomepageView> {
         },
         shouldAddCallback: true,
         child: Scaffold(
-          backgroundColor: AppColors.plainWhite,
-          extendBodyBehindAppBar: true,
-          appBar: AppBar(
-            title: Text(
-              "Own the City",
-              style: TextStyle(color: AppColors.kPrimaryColor),
+          backgroundColor: Colors.grey[50],
+          extendBodyBehindAppBar: false,
+          appBar: PreferredSize(
+            preferredSize: Size(screenSize(context).width, 60),
+            child: const CustomAppbar(
+              title: "My Schedules",
             ),
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            shadowColor: AppColors.plainWhite,
-            elevation: 0,
           ),
           bottomNavigationBar: CustomNavBar(
             color: AppColors.plainWhite,
@@ -66,9 +64,12 @@ class _HomepageViewState extends State<HomepageView> {
           body: GetBuilder<HomepageController>(
             init: HomepageController(),
             builder: (_) {
-              return _controller.doneLoading
-                  ? const HompageLoaded()
-                  : const Center(child: CircularProgressIndicator());
+              return
+                  // _controller.doneLoading
+                  //     ?
+                  const HompageLoaded()
+                  // : const Center(child: CircularProgressIndicator())
+                  ;
             },
           ),
         ),
