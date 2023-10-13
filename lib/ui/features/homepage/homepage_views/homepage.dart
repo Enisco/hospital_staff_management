@@ -54,7 +54,7 @@ class _HomepageViewState extends State<HomepageView> {
           bottomNavigationBar: CustomNavBar(
             color: AppColors.plainWhite,
           ),
-          body: GlobalVariables.myUsername.contains("admin") == true
+          body: GlobalVariables.accountType == "admin"
               ? const AdminHomePage()
               : const StaffHomePage(),
         ),

@@ -99,7 +99,6 @@ class LoginController extends GetxController {
             "myUsername", usernameController.text.trim());
         saveSharedPrefsStringValue("accountType", "admin");
         log.wtf("Logged in as ${GlobalVariables.accountType}");
-        log.wtf("Logged in");
         gotoHomepage(context);
       } else {
         log.d('Password does not match.');
@@ -138,6 +137,7 @@ class LoginController extends GetxController {
         saveSharedPrefsStringValue("accountType", "staff");
         gotoHomepage(context);
         log.wtf("Logged in as ${GlobalVariables.accountType}");
+        gotoHomepage(context);
       } else {
         log.d('Password does not match.');
         errMessage = "Error! username or password incorrect";

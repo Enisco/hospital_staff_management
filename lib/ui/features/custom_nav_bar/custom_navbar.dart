@@ -179,90 +179,99 @@ class _CustomNavBarState extends State<CustomNavBar> {
             ),
 
             /// Profile Icon
-            GlobalVariables.accountType == 'staff'
-                ? InkWell(
-                    onTap: () {
-                      if (Provider.of<CurrentPage>(context, listen: false)
-                              .currentPageIndex !=
-                          2) {
-                        print('Profile selected');
-                        final bool currentPageIndexCheck =
-                            Provider.of<CurrentPage>(context, listen: false)
-                                        .currentPageIndex ==
-                                    0
-                                ? true
-                                : false;
-                        Provider.of<CurrentPage>(context, listen: false)
-                            .setCurrentPageIndex(2);
+            // GlobalVariables.accountType == 'staff'
+            //     ?
+            InkWell(
+              onTap: () {
+                if (Provider.of<CurrentPage>(context, listen: false)
+                        .currentPageIndex !=
+                    2) {
+                  print(GlobalVariables.accountType == 'staff'
+                      ? 'Profile selected'
+                      : 'Add Staff selected');
+                  final bool currentPageIndexCheck =
+                      Provider.of<CurrentPage>(context, listen: false)
+                                  .currentPageIndex ==
+                              0
+                          ? true
+                          : false;
+                  Provider.of<CurrentPage>(context, listen: false)
+                      .setCurrentPageIndex(2);
 
-                        print('currentPageIndexCheck: $currentPageIndexCheck');
-                        currentPageIndexCheck == true
-                            ? context.push('/profilePageView')
-                            : context.pushReplacement('/profilePageView');
-                      } else {
-                        print('You are already in ProfilePageView');
-                      }
-                    },
-                    child: Container(
-                      width: 90,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(23)),
-                        border: Border.all(
-                          color:
-                              Provider.of<CurrentPage>(context, listen: false)
-                                          .currentPageIndex ==
-                                      2
-                                  ? AppColors.lightGray
-                                  : AppColors.transparent,
-                        ),
-                        color: Provider.of<CurrentPage>(context, listen: false)
+                  print('currentPageIndexCheck: $currentPageIndexCheck');
+                  currentPageIndexCheck == true
+                      ? context.push(GlobalVariables.accountType == 'staff'
+                          ? '/profilePageView'
+                          : '/addNewStaffPageView')
+                      : context.pushReplacement(
+                          GlobalVariables.accountType == 'staff'
+                              ? '/profilePageView'
+                              : '/addNewStaffPageView');
+                } else {
+                  print(
+                      'You are already in ${GlobalVariables.accountType == 'staff' ? "ProfilePageView" : ""}');
+                }
+              },
+              child: Container(
+                width: 90,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(23)),
+                  border: Border.all(
+                    color: Provider.of<CurrentPage>(context, listen: false)
+                                .currentPageIndex ==
+                            2
+                        ? AppColors.lightGray
+                        : AppColors.transparent,
+                  ),
+                  color: Provider.of<CurrentPage>(context, listen: false)
+                              .currentPageIndex ==
+                          2
+                      ? AppColors.kPrimaryColor
+                      : AppColors.transparent,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: Provider.of<CurrentPage>(context, listen: false)
+                              .currentPageIndex ==
+                          2
+                      ? 20
+                      : 0,
+                  vertical: 3,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(
+                      GlobalVariables.accountType == 'staff'
+                          ? CupertinoIcons.person
+                          : Icons.person_add_alt_outlined,
+                      color: Provider.of<CurrentPage>(context, listen: false)
+                                  .currentPageIndex ==
+                              2
+                          ? AppColors.plainWhite
+                          : AppColors.fullBlack.withOpacity(0.5),
+                      size: 20,
+                    ),
+                    Text(
+                      GlobalVariables.accountType == 'staff'
+                          ? AppKeyStrings.profile
+                          : "Add Staff",
+                      style: AppStyles.navBarStringStyle(
+                        Provider.of<CurrentPage>(context, listen: false)
                                     .currentPageIndex ==
                                 2
-                            ? AppColors.kPrimaryColor
-                            : AppColors.transparent,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal:
-                            Provider.of<CurrentPage>(context, listen: false)
-                                        .currentPageIndex ==
-                                    2
-                                ? 20
-                                : 0,
-                        vertical: 3,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            CupertinoIcons.person,
-                            color:
-                                Provider.of<CurrentPage>(context, listen: false)
-                                            .currentPageIndex ==
-                                        2
-                                    ? AppColors.plainWhite
-                                    : AppColors.fullBlack.withOpacity(0.5),
-                            size: 20,
-                          ),
-                          Text(
-                            AppKeyStrings.profile,
-                            style: AppStyles.navBarStringStyle(
-                              Provider.of<CurrentPage>(context, listen: false)
-                                          .currentPageIndex ==
-                                      2
-                                  ? AppColors.plainWhite
-                                  : AppColors.fullBlack.withOpacity(0.5),
-                            ),
-                          ),
-                        ],
+                            ? AppColors.plainWhite
+                            : AppColors.fullBlack.withOpacity(0.5),
                       ),
                     ),
-                  )
-                : const SizedBox.shrink(),
+                  ],
+                ),
+              ),
+            )
+            // : const SizedBox.shrink(),
+            ,
           ],
         ),
       ),
     );
   }
 }
- 
