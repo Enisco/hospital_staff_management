@@ -178,9 +178,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
               ),
             ),
 
-            /// Profile Icon
-            // GlobalVariables.accountType == 'staff'
-            //     ?
+            /// Profile/Add_Staff Icon
             InkWell(
               onTap: () {
                 if (Provider.of<CurrentPage>(context, listen: false)

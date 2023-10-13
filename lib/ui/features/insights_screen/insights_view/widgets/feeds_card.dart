@@ -162,17 +162,17 @@ class _FeedsCardState extends State<FeedsCard> with TickerProviderStateMixin {
               CustomAnimatedIcon(
                 posterUsername: widget.feedData!.username,
               ),
-              // const SizedBox(width: 10),
-              // Column(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     CustomSpacer(8),
-              //     Text(
-              //       '${widget.feedData?.thumbsUp}',
-              //       style: AppStyles.regularStringStyle(12, AppColors.black),
-              //     ),
-              //   ],
-              // ),
+              const SizedBox(width: 10),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomSpacer(8),
+                  Text(
+                    '${widget.feedData?.thumbsUp}',
+                    style: AppStyles.regularStringStyle(12, AppColors.black),
+                  ),
+                ],
+              ),
             ],
           ),
           CustomSpacer(5),

@@ -98,12 +98,12 @@ class _CustomTextfieldState extends State<CustomTextfield> {
       decoration: InputDecoration(
           labelText: widget.labelText,
           hintText: widget.hintText,
-          fillColor: Colors.grey[50],
+          fillColor: Colors.grey[200],
           filled: true,
           contentPadding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
           border: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.blue, width: 1.0),
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(10.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.amber.shade800, width: 1.0),

@@ -16,28 +16,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/app/services/snackbar_service.dart';
-import 'package:hospital_staff_management/ui/features/custom_nav_bar/page_index_class.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
-import 'package:provider/provider.dart';
 
 var log = getLogger('RecordPageView');
 
-// ignore: constant_identifier_names
-enum ToponymTypes { Natural, Artificial }
-
-class RecordToponymController extends GetxController {
-  RecordToponymController();
+class InsightsController extends GetxController {
+  InsightsController();
 
   bool loading = false;
 
-  List<InsightsFeedModel> feedData = [
-    // sampleFeedData2,
-    // sampleFeedData3,
-    // sampleFeedData0,
-    // sampleFeedData1,
-    // sampleFeedData4
-  ];
+  List<InsightsFeedModel> feedData = [];
 
   getFeeds() async {
     log.w("getting feeds");
@@ -56,9 +45,9 @@ class RecordToponymController extends GetxController {
   }
 
   Future<void> refreshFeeds() async {
-    final toponysFeedsRef = FirebaseDatabase.instance.ref("insights_feeds");
+    final insightsFeedsRef = FirebaseDatabase.instance.ref("insights_feeds");
 
-    toponysFeedsRef.onChildAdded.listen(
+    insightsFeedsRef.onChildAdded.listen(
       (event) {
         InsightsFeedModel insightsFeed = insightsFeedModelFromJson(
           jsonEncode(event.snapshot.value).toString(),
@@ -82,8 +71,6 @@ class RecordToponymController extends GetxController {
   TextEditingController insightsTitleController = TextEditingController();
   TextEditingController insightsDescriptionController = TextEditingController();
 
-  var selectedToponymTypes = ToponymTypes.Natural;
-
   List<XFile> imageFilesSelected = [];
   int selectedImageIndex = 0;
   String? createInsightsId;
@@ -94,12 +81,11 @@ class RecordToponymController extends GetxController {
     insightsTitleController = TextEditingController();
     insightsDescriptionController = TextEditingController();
 
-    selectedToponymTypes = ToponymTypes.Natural;
     imageFilesSelected = [];
     update();
   }
 
-  String generateRandomrecordToponymId() {
+  String generateRandomInsightId() {
     Random random = Random();
     int randomNumber1 = random.nextInt(10000);
     int randomNumber2 = random.nextInt(99999);
@@ -107,7 +93,7 @@ class RecordToponymController extends GetxController {
         randomNumber1.toString() +
         randomNumber2.toString();
     update();
-    print("GeneratedRandomRecordToponymId: $createInsightsId");
+    print("Generated Random Insight Id: $createInsightsId");
     return createInsightsId!;
   }
 
@@ -149,29 +135,13 @@ class RecordToponymController extends GetxController {
     print("Returning");
   }
 
-  /// Snap image with Camera
-  captureFromCamera() async {
-    XFile? capturedImage = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-      maxWidth: 1800,
-      maxHeight: 1800,
-    );
-    if (capturedImage != null) {
-      imageFilesSelected.add(capturedImage);
-      update();
-    } else {
-      print("No Image selected");
-    }
-    print("Returning");
-  }
-
   Future<void> uploadCreatedInsightData(BuildContext context) async {
     if (insightsTitleController.text.trim().isNotEmpty &&
         insightsDescriptionController.text.trim().isNotEmpty &&
         imageFilesSelected.isNotEmpty) {
       loading = true;
       update();
-      createInsightsId = generateRandomrecordToponymId();
+      createInsightsId = generateRandomInsightId();
 
       /// Upload image to cloud storage
       final firebaseStorage = FirebaseStorage.instance;
@@ -239,14 +209,7 @@ class RecordToponymController extends GetxController {
       });
     } else {
       showCustomSnackBar(context, "Ensure all fields are filled", () {},
-          AppColors.coolRed, 1000);
+          AppColors.fullBlack, 1000);
     }
-  }
-
-  void gotoHomepage(BuildContext context) {
-    resetValues();
-    Provider.of<CurrentPage>(context, listen: false).setCurrentPageIndex(0);
-    update();
-    context.pop();
   }
 }
