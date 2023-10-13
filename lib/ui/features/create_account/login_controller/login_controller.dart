@@ -100,6 +100,7 @@ class LoginController extends GetxController {
         saveSharedPrefsStringValue("accountType", "admin");
         log.wtf("Logged in as ${GlobalVariables.accountType}");
         log.wtf("Logged in");
+        gotoHomepage(context);
       } else {
         log.d('Password does not match.');
         errMessage = "Error! username or password incorrect";

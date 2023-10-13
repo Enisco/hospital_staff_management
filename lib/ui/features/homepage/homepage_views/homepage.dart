@@ -24,8 +24,6 @@ class HomepageView extends StatefulWidget {
 }
 
 class _HomepageViewState extends State<HomepageView> {
-  final _controller = Get.put(HomepageController());
-
   @override
   void initState() {
     super.initState();
