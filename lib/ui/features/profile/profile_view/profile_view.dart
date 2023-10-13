@@ -93,14 +93,15 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                               color: AppColors.plainWhite,
                               shape: BoxShape.circle,
                             ),
-                            child: _controller.profileImageLink == ' '
+                            child: _controller.myAccountData.image == '' ||
+                                    _controller.myAccountData.image == null
                                 ? CircularProgressIndicator(
                                     color: AppColors.kPrimaryColor,
                                   )
                                 : CircleAvatar(
                                     backgroundColor: AppColors.blueGray,
                                     foregroundImage: CachedNetworkImageProvider(
-                                      _controller.profileImageLink,
+                                      _controller.myAccountData.image!,
                                     ),
                                   ),
                           ),

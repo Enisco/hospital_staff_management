@@ -1,19 +1,13 @@
-// To parse this JSON data, do
-//
-//     final recordToponymModel = recordToponymModelFromJson(jsonString);
-
-// ignore_for_file: override_on_non_overriding_member
-
 import 'dart:convert';
 
-RecordToponymModel recordToponymModelFromJson(String str) =>
-    RecordToponymModel.fromJson(json.decode(str));
+InsightsFeedModel insightsFeedModelFromJson(String str) =>
+    InsightsFeedModel.fromJson(json.decode(str));
 
-String recordToponymModelToJson(RecordToponymModel data) =>
+String insightsFeedModelToJson(InsightsFeedModel data) =>
     json.encode(data.toJson());
 
-class RecordToponymModel {
-  RecordToponymModel({
+class InsightsFeedModel {
+  InsightsFeedModel({
     required this.username,
     required this.thumbsUp,
     required this.feedCoverPictureLink,
@@ -21,7 +15,6 @@ class RecordToponymModel {
     required this.feedDescription,
     required this.userProfilePicsLink,
     required this.dateCreated,
-    required this.toponymType,
   });
 
   String username;
@@ -31,9 +24,8 @@ class RecordToponymModel {
   String feedDescription;
   String userProfilePicsLink;
   String dateCreated;
-  String toponymType;
 
-  RecordToponymModel copyWith({
+  InsightsFeedModel copyWith({
     String? username,
     int? thumbsUp,
     List<String>? feedCoverPictureLink,
@@ -41,9 +33,8 @@ class RecordToponymModel {
     String? feedDescription,
     String? userProfilePicsLink,
     String? dateCreated,
-    String? toponymType,
   }) =>
-      RecordToponymModel(
+      InsightsFeedModel(
         username: username ?? this.username,
         thumbsUp: thumbsUp ?? this.thumbsUp,
         feedCoverPictureLink: feedCoverPictureLink ?? this.feedCoverPictureLink,
@@ -51,11 +42,10 @@ class RecordToponymModel {
         feedDescription: feedDescription ?? this.feedDescription,
         userProfilePicsLink: userProfilePicsLink ?? this.userProfilePicsLink,
         dateCreated: dateCreated ?? this.dateCreated,
-        toponymType: toponymType ?? this.toponymType,
       );
 
-  factory RecordToponymModel.fromJson(Map<String, dynamic> json) =>
-      RecordToponymModel(
+  factory InsightsFeedModel.fromJson(Map<String, dynamic> json) =>
+      InsightsFeedModel(
         username: json["username"],
         thumbsUp: json["thumbsUp"],
         feedCoverPictureLink:
@@ -64,7 +54,6 @@ class RecordToponymModel {
         feedDescription: json["feedDescription"],
         userProfilePicsLink: json["userProfilePicsLink"],
         dateCreated: json["dateCreated"],
-        toponymType: json["toponymType"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -76,18 +65,5 @@ class RecordToponymModel {
         "feedDescription": feedDescription,
         "userProfilePicsLink": userProfilePicsLink,
         "dateCreated": dateCreated,
-        "toponymType": toponymType,
       };
-
-  @override
-  List<Object?> get props => [
-        username,
-        userProfilePicsLink,
-        feedName,
-        feedDescription,
-        feedCoverPictureLink,
-        thumbsUp,
-        toponymType,
-        dateCreated,
-      ];
 }

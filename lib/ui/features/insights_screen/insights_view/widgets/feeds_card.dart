@@ -4,9 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:hospital_staff_management/ui/features/homepage/homepage_model/feed_model.dart';
-import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/animated_icon.dart';
-import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/carousel_index_widget.dart';
+import 'package:hospital_staff_management/ui/features/insights_screen/insights_model/feed_model.dart';
+import 'package:hospital_staff_management/ui/features/insights_screen/insights_view/widgets/animated_icon.dart';
+import 'package:hospital_staff_management/ui/features/insights_screen/insights_view/widgets/carousel_index_widget.dart';
 import 'package:hospital_staff_management/ui/shared/spacer.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_styles.dart';
@@ -15,7 +15,7 @@ import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
 class FeedsCard extends StatefulWidget {
   FeedsCard({super.key, required this.feedData});
 
-  FeedModel? feedData;
+  InsightsFeedModel? feedData;
 
   @override
   State<FeedsCard> createState() => _FeedsCardState();
@@ -182,17 +182,6 @@ class _FeedsCardState extends State<FeedsCard> with TickerProviderStateMixin {
               text: TextSpan(
                 text: '${widget.feedData?.feedName}  ',
                 style: AppStyles.regularStringStyle(15, AppColors.black),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: '${widget.feedData?.toponymType}',
-                    style: AppStyles.regularStringStyle(
-                      12,
-                      widget.feedData?.toponymType == 'Natural'
-                          ? const Color.fromARGB(255, 38, 124, 41)
-                          : const Color.fromARGB(255, 243, 152, 32),
-                    ).copyWith(backgroundColor: AppColors.blueGray),
-                  ),
-                ],
               ),
             ),
             collapsed: Text(

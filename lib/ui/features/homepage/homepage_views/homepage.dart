@@ -7,8 +7,10 @@ import 'package:get/get.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navbar.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
-import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/homepage_loaded.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/staffs_card.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
+import 'package:hospital_staff_management/ui/shared/global_variables.dart';
+import 'package:hospital_staff_management/ui/shared/spacer.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
 
@@ -28,7 +30,6 @@ class _HomepageViewState extends State<HomepageView> {
   void initState() {
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    _controller.getFeeds();
   }
 
   @override
@@ -52,28 +53,140 @@ class _HomepageViewState extends State<HomepageView> {
         child: Scaffold(
           backgroundColor: Colors.grey[50],
           extendBodyBehindAppBar: false,
-          appBar: PreferredSize(
-            preferredSize: Size(screenSize(context).width, 60),
-            child: const CustomAppbar(
-              title: "My Schedules",
-            ),
-          ),
           bottomNavigationBar: CustomNavBar(
             color: AppColors.plainWhite,
           ),
-          body: GetBuilder<HomepageController>(
-            init: HomepageController(),
-            builder: (_) {
-              return
-                  // _controller.doneLoading
-                  //     ?
-                  const HompageLoaded()
-                  // : const Center(child: CircularProgressIndicator())
-                  ;
-            },
-          ),
+          body: GlobalVariables.myUsername.contains("admin") == true
+              ? const AdminHomePage()
+              : const StaffHomePage(),
         ),
       ),
+    );
+  }
+}
+
+class AdminHomePage extends StatefulWidget {
+  const AdminHomePage({super.key});
+
+  @override
+  State<AdminHomePage> createState() => _AdminHomePageState();
+}
+
+class _AdminHomePageState extends State<AdminHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    _controller.getAllStaffsData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  final _controller = Get.put(HomepageController());
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<HomepageController>(
+      init: HomepageController(),
+      builder: (_) {
+        return Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size(screenSize(context).width, 60),
+            child: const CustomAppbar(
+              title: "Staff Schedules",
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(
+              Icons.person_add_alt_outlined,
+              color: AppColors.plainWhite,
+            ),
+            onPressed: () {
+              // TODO: Go to create Staff Here
+              log.w("Go to create Staff");
+            },
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                  ),
+                  color: AppColors.lighterGray,
+                  child: ListView.builder(
+                    reverse: false,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: _controller.staffsData.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return StaffCard(
+                        staffData: _controller.staffsData[index],
+                      );
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class StaffHomePage extends StatefulWidget {
+  const StaffHomePage({super.key});
+
+  @override
+  State<StaffHomePage> createState() => _StaffHomePageState();
+}
+
+class _StaffHomePageState extends State<StaffHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    _controller.getMyData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  final _controller = Get.put(HomepageController());
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<HomepageController>(
+      init: HomepageController(),
+      builder: (_) {
+        return Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size(screenSize(context).width, 60),
+            child: const CustomAppbar(
+              title: "<My> Schedules",
+            ),
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+            ),
+            child: Column(
+              children: [
+                CustomSpacer(20),
+                Center(
+                  child: Text(
+                    _controller.myData?.fullName ?? "No data",
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

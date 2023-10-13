@@ -51,7 +51,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                 }
               },
               child: Container(
-                width: 102,
+                width: 90,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(23)),
                   border: Border.all(
@@ -71,7 +71,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                   horizontal: Provider.of<CurrentPage>(context, listen: false)
                               .currentPageIndex ==
                           0
-                      ? 30
+                      ? 20
                       : 0,
                   vertical: 3,
                 ),
@@ -108,7 +108,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                 if (Provider.of<CurrentPage>(context, listen: false)
                         .currentPageIndex !=
                     1) {
-                  print('Record selected');
+                  print('insights selected');
                   final bool currentPageIndexCheck =
                       Provider.of<CurrentPage>(context, listen: false)
                                   .currentPageIndex ==
@@ -120,14 +120,14 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
                   print('currentPageIndexCheck: $currentPageIndexCheck');
                   currentPageIndexCheck == true
-                      ? context.push('/recordPageView')
-                      : context.pushReplacement('/recordPageView');
+                      ? context.push('/insightsPageView')
+                      : context.pushReplacement('/insightsPageView');
                 } else {
-                  print('You are already in recordPageView');
+                  print('You are already in insightsView');
                 }
               },
               child: Container(
-                width: 102,
+                width: 90,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(23)),
                   border: Border.all(
@@ -147,7 +147,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                   horizontal: Provider.of<CurrentPage>(context, listen: false)
                               .currentPageIndex ==
                           1
-                      ? 30
+                      ? 20
                       : 0,
                   vertical: 3,
                 ),
@@ -204,7 +204,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                       }
                     },
                     child: Container(
-                      width: 102,
+                      width: 90,
                       decoration: BoxDecoration(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(23)),
@@ -227,7 +227,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                             Provider.of<CurrentPage>(context, listen: false)
                                         .currentPageIndex ==
                                     2
-                                ? 30
+                                ? 20
                                 : 0,
                         vertical: 3,
                       ),
@@ -259,85 +259,10 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     ),
                   )
                 : const SizedBox.shrink(),
-
-            /// Activity Icon
-            // InkWell(
-            //   onTap: () {
-            //     if (Provider.of<CurrentPage>(context, listen: false)
-            //             .currentPageIndex !=
-            //         3) {
-            //       print('Activity selected');
-            //       final bool currentPageIndexCheck =
-            //           Provider.of<CurrentPage>(context, listen: false)
-            //                       .currentPageIndex ==
-            //                   0
-            //               ? true
-            //               : false;
-            //       Provider.of<CurrentPage>(context, listen: false)
-            //           .setCurrentPageIndex(3);
-
-            //       print('currentPageIndexCheck: $currentPageIndexCheck');
-            //       currentPageIndexCheck == true
-            //           ? context.push('/activityPageView')
-            //           : context.pushReplacement('/activityPageView');
-            //     } else {
-            //       print('You are already in ActivityPageView');
-            //     }
-            //   },
-            //   child: Container(
-            //     width: 102,
-            //     decoration: BoxDecoration(
-            //       borderRadius: const BorderRadius.all(Radius.circular(23)),
-            //       border: Border.all(
-            //         color: Provider.of<CurrentPage>(context, listen: false)
-            //                     .currentPageIndex ==
-            //                 3
-            //             ? AppColors.lightGray
-            //             : AppColors.transparent,
-            //       ),
-            //       color: Provider.of<CurrentPage>(context, listen: false)
-            //                   .currentPageIndex ==
-            //               3
-            //           ? AppColors.kPrimaryColor
-            //           : AppColors.transparent,
-            //     ),
-            //     padding: EdgeInsets.symmetric(
-            //       horizontal: Provider.of<CurrentPage>(context, listen: false)
-            //                   .currentPageIndex ==
-            //               3
-            //           ? 30
-            //           : 0,
-            //       vertical: 3,
-            //     ),
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //       children: [
-            //         Icon(
-            //           Icons.leaderboard_outlined,
-            //           color: Provider.of<CurrentPage>(context, listen: false)
-            //                       .currentPageIndex ==
-            //                   3
-            //               ? AppColors.plainWhite
-            //               : AppColors.fullBlack.withOpacity(0.5),
-            //           size: 20,
-            //         ),
-            //         Text(
-            //           AppKeyStrings.activity,
-            //           style: AppStyles.navBarStringStyle(
-            //             Provider.of<CurrentPage>(context, listen: false)
-            //                         .currentPageIndex ==
-            //                     3
-            //                 ? AppColors.plainWhite
-            //                 : AppColors.fullBlack.withOpacity(0.5),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
     );
   }
 }
+ 

@@ -8,9 +8,10 @@ import 'package:get/get.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/app/helpers/sharedprefs.dart';
+import 'package:hospital_staff_management/ui/features/create_account/create_account_model/staff_account_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
-import 'package:hospital_staff_management/ui/features/create_account/create_account_model/account_models.dart';
+import 'package:hospital_staff_management/ui/features/create_account/create_account_model/admin_models.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 
 var log = getLogger('CreateUserController');

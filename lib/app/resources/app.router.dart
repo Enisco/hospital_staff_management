@@ -5,7 +5,7 @@ import 'package:hospital_staff_management/ui/features/create_account/login_views
 import 'package:hospital_staff_management/ui/features/activity/activity_view/activity_view.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/homepage.dart';
 import 'package:hospital_staff_management/ui/features/profile/profile_view/profile_view.dart';
-import 'package:hospital_staff_management/ui/features/record_screen/record_view/record_view.dart';
+import 'package:hospital_staff_management/ui/features/insights_screen/insights_view/insights_view.dart';
 import 'package:hospital_staff_management/ui/features/splash_screen/splash_screen.dart';
 
 class AppRouter {
@@ -26,9 +26,9 @@ class AppRouter {
             child: const HomepageView(), key: state.pageKey),
       ),
       GoRoute(
-        path: '/recordPageView',
+        path: '/insightsPageView',
         pageBuilder: (context, state) => CustomNormalTransition(
-            child: const RecordPageView(), key: state.pageKey),
+            child: const InsightsPageView(), key: state.pageKey),
       ),
       GoRoute(
         path: '/profilePageView',

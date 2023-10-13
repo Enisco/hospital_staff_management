@@ -7,20 +7,19 @@ import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navb
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/page_index_class.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
-import 'package:hospital_staff_management/utils/app_constants/app_key_strings.dart';
 import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
 import 'package:provider/provider.dart';
 
-var log = getLogger('RecordPageView');
+var log = getLogger('InsightsPageView');
 
-class RecordPageView extends StatefulWidget {
-  const RecordPageView({super.key});
+class InsightsPageView extends StatefulWidget {
+  const InsightsPageView({super.key});
 
   @override
-  State<RecordPageView> createState() => _RecordPageViewState();
+  State<InsightsPageView> createState() => _InsightsPageViewState();
 }
 
-class _RecordPageViewState extends State<RecordPageView> {
+class _InsightsPageViewState extends State<InsightsPageView> {
   // final _controller = Get.put(RecordToponymController());
 
   @override
@@ -48,8 +47,8 @@ class _RecordPageViewState extends State<RecordPageView> {
         child: Scaffold(
             appBar: PreferredSize(
               preferredSize: Size(screenSize(context).width, 60),
-              child: CustomAppbar(
-                title: AppKeyStrings.recordToponym,
+              child: const CustomAppbar(
+                title: "Insights",
               ),
             ),
             bottomNavigationBar: CustomNavBar(
