@@ -105,7 +105,9 @@ class StaffCard extends StatelessWidget {
                                   endDate: staffData.currentShift!.end!,
                                 ),
                                 style: AppStyles.keyStringStyle(
-                                    14, AppColors.plainWhite),
+                                  14,
+                                  AppColors.plainWhite,
+                                ),
                               ),
                             ]),
                       ),
@@ -121,7 +123,9 @@ class StaffCard extends StatelessWidget {
                                   endDate: staffData.offPeriod!.end!,
                                 ),
                                 style: AppStyles.keyStringStyle(
-                                    14, AppColors.plainWhite),
+                                  14,
+                                  AppColors.plainWhite,
+                                ),
                               ),
                             ]),
                       ),
