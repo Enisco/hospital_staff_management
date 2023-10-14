@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
-import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navbar.dart';
 import 'package:hospital_staff_management/ui/features/insights_screen/insights_controller/insights_controller.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
 import 'package:hospital_staff_management/ui/shared/custom_button.dart';
@@ -46,9 +45,6 @@ class _CreateInsightPageViewState extends State<CreateInsightPageView> {
           child: const CustomAppbar(
             title: "Create Insight Post",
           ),
-        ),
-        bottomNavigationBar: CustomNavBar(
-          color: AppColors.plainWhite,
         ),
         body: GestureDetector(
           onTap: (() =>
@@ -102,9 +98,6 @@ class _CreateInsightPageViewState extends State<CreateInsightPageView> {
                               decoration: BoxDecoration(
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(7)),
-                                // border: Border.all(
-                                //   color: AppColors.kPrimaryColor,
-                                // ),
                                 color: AppColors.blueGray,
                               ),
                               height: 90,
@@ -176,6 +169,7 @@ class _CreateInsightPageViewState extends State<CreateInsightPageView> {
                             _controller.insightsTitleController,
                         hintText: 'Title of your post',
                         textInputAction: TextInputAction.next,
+                        textMaxLength: 30,
                       ),
                       CustomSpacer(20),
                       Padding(

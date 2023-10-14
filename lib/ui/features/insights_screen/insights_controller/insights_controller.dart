@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_log.d
 
 import 'dart:convert';
 import 'dart:math';
@@ -13,13 +13,12 @@ import 'package:hospital_staff_management/ui/features/create_account/create_acco
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/staffs_card.dart';
 import 'package:hospital_staff_management/ui/features/insights_screen/insights_model/feed_model.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/app/services/snackbar_service.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 
-var log = getLogger('RecordPageView');
+var log = getLogger('InsightsController');
 
 class InsightsController extends GetxController {
   InsightsController();
@@ -35,16 +34,26 @@ class InsightsController extends GetxController {
   }
 
   /// Format date string to datetime format
-  String formatToDateTime(String dateString) {
-    DateTime tempDate = DateFormat("EEE, MMM d, yyyy hh:mm aaa").parse(
-      dateString,
-    );
-    String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(tempDate);
-    print('formattedDate = $formattedDate');
-    return formattedDate;
-  }
+  // String formatToDateTime(String dateString) {
+  //   DateTime tempDate = DateFormat("EEE, MMM d, yyyy hh:mm aaa").parse(
+  //     dateString,
+  //   );
+  //   String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(tempDate);
+  //   log.d('formattedDate = $formattedDate');
+  //   return formattedDate;
+  // }
+
+  // String formatCurrentTime() {
+  //   DateTime now = DateTime.now();
+  //   String lastTime =
+  //       "${DateFormat.yMMMEd().format(now)} ${DateFormat.jm().format(DateTime.now())}";
+  //   log.d(lastTime);
+  //   return lastTime;
+  // }
 
   Future<void> refreshFeeds() async {
+    loading = true;
+    update();
     final insightsFeedsRef = FirebaseDatabase.instance.ref("insights_feeds");
 
     insightsFeedsRef.onChildAdded.listen(
@@ -56,13 +65,15 @@ class InsightsController extends GetxController {
         feedData.add(insightsFeed);
 
         if (feedData.length > 1) {
-          feedData.sort((a, b) => formatToDateTime(b.dateCreated)
-              .compareTo(formatToDateTime(a.dateCreated)));
+          feedData.sort((a, b) => DateTime.parse(b.dateCreated)
+              .compareTo(DateTime.parse(a.dateCreated)));
 
           loading = true;
           update();
         }
 
+        loading = false;
+        update();
         log.wtf("returned feeds: ${insightsFeed.toJson()}");
         log.d("Going again");
       },
@@ -94,16 +105,8 @@ class InsightsController extends GetxController {
         randomNumber1.toString() +
         randomNumber2.toString();
     update();
-    print("Generated Random Insight Id: $createInsightsId");
+    log.d("Generated Random Insight Id: $createInsightsId");
     return createInsightsId!;
-  }
-
-  String formatCurrentTime() {
-    DateTime now = DateTime.now();
-    String lastTime =
-        "${DateFormat.yMMMEd().format(now)} ${DateFormat.jm().format(DateTime.now())}";
-    print(lastTime);
-    return lastTime;
   }
 
   void changeSelectedImageIndex(int selectedPickIndex) {
@@ -129,11 +132,11 @@ class InsightsController extends GetxController {
 
       imageFilesSelected.addAll(selectedImages);
       update();
-      print("Image List Length:${imageFilesSelected.length}");
+      log.d("Image List Length:${imageFilesSelected.length}");
     } else {
-      print("No Image selected");
+      log.d("No Image selected");
     }
-    print("Returning");
+    log.d("Returning");
   }
 
   Future<void> uploadCreatedInsightData(BuildContext context) async {
@@ -166,17 +169,25 @@ class InsightsController extends GetxController {
         log.w("downloadUrls: $downloadUrls");
         update();
 
-        String dateString = formatCurrentTime();
+        // String dateString = formatCurrentTime();
+        String dateString = DateTime.now().toIso8601String();
         log.wtf("dateString: $dateString");
 
         /// Get my details from RT Db
         final getDataRef = FirebaseDatabase.instance.ref();
-        final getDataSnapshot = await getDataRef
-            .child('user_details/${GlobalVariables.myUsername}')
-            .get();
+        DataSnapshot? getDataSnapshot;
+
+        if (GlobalVariables.myUsername.contains('admin') == true) {
+          getDataSnapshot =
+              await getDataRef.child(GlobalVariables.myUsername).get();
+        } else {
+          getDataSnapshot = await getDataRef
+              .child('user_details/${GlobalVariables.myUsername}')
+              .get();
+        }
 
         if (getDataSnapshot.exists) {
-          print("User exists: ${getDataSnapshot.value}");
+          log.d("User exists: ${getDataSnapshot.value}");
 
           StaffAccountModel userAccountModel = staffAccountModelFromJson(
               jsonEncode(getDataSnapshot.value).toString());
@@ -217,7 +228,7 @@ class InsightsController extends GetxController {
       showCustomSnackBar(context, "Ensure all fields are filled", () {},
           AppColors.fullBlack, 1000);
     }
-    loading = false;
+    // resetValues();
     update();
   }
 }

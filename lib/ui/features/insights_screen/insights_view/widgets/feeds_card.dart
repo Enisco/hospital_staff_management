@@ -11,6 +11,7 @@ import 'package:hospital_staff_management/ui/shared/spacer.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_styles.dart';
 import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
+import 'package:intl/intl.dart';
 
 class FeedsCard extends StatefulWidget {
   FeedsCard({super.key, required this.feedData});
@@ -29,83 +30,81 @@ class _FeedsCardState extends State<FeedsCard> with TickerProviderStateMixin {
     super.initState();
   }
 
+  String formatTime(String isoSateString) {
+    String formatTimeString =
+        "${DateFormat.yMMMEd().format(DateTime.parse(isoSateString))} ${DateFormat.jm().format(DateTime.parse(isoSateString))}";
+    return formatTimeString;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
-        bottom: 6,
-      ),
+      padding: const EdgeInsets.only(top: 16, bottom: 6),
       margin: const EdgeInsets.symmetric(
         horizontal: 0,
         vertical: 8,
       ),
       width: screenSize(context).width,
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(31),
-        ),
         color: AppColors.plainWhite,
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              SizedBox(
-                child: CircleAvatar(
-                  backgroundColor: AppColors.blueGray,
-                  radius: 21.5,
-                  backgroundImage: CachedNetworkImageProvider(
-                    '${widget.feedData?.userProfilePicsLink}',
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Row(
+              children: [
+                SizedBox(
+                  child: CircleAvatar(
+                    backgroundColor: AppColors.blueGray,
+                    radius: 21.5,
+                    backgroundImage: CachedNetworkImageProvider(
+                      '${widget.feedData?.userProfilePicsLink}',
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              SizedBox(
-                height: 43,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          '${widget.feedData?.fullName}',
-                          style:
-                              AppStyles.regularStringStyle(14, AppColors.black),
-                        ),
-                      ],
-                    ),
-                    CustomSpacer(4),
-                    Row(
-                      children: [
-                        Text(
-                          '${widget.feedData?.dateCreated}',
-                          style: AppStyles.subStringStyle(
-                            11,
-                            AppColors.opaqueDark,
+                const SizedBox(width: 16),
+                SizedBox(
+                  height: 43,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '${widget.feedData?.fullName}',
+                            style: AppStyles.regularStringStyle(
+                                14, AppColors.black),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      CustomSpacer(4),
+                      Row(
+                        children: [
+                          Text(
+                            formatTime('${widget.feedData?.dateCreated}'),
+                            style: AppStyles.subStringStyle(
+                              11,
+                              AppColors.opaqueDark,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           CustomSpacer(12),
           SizedBox(
             width: screenSize(context).width,
-            height: 300,
             child: CarouselSlider(
               options: CarouselOptions(
-                height: 300.0,
+                height: 380.0,
                 viewportFraction: 1.0,
-                autoPlay: widget.feedData!.feedCoverPictureLink.length > 1
-                    ? true
-                    : false,
+                autoPlay: false,
                 enableInfiniteScroll:
                     widget.feedData!.feedCoverPictureLink.length > 1
                         ? true
@@ -128,7 +127,6 @@ class _FeedsCardState extends State<FeedsCard> with TickerProviderStateMixin {
                           ),
                           fit: BoxFit.cover,
                         ),
-                        borderRadius: BorderRadius.circular(20),
                       ),
                     );
                   },
@@ -157,52 +155,58 @@ class _FeedsCardState extends State<FeedsCard> with TickerProviderStateMixin {
                 )
               : const SizedBox.shrink(),
           CustomSpacer(5),
-          Row(
-            children: [
-              CustomAnimatedIcon(
-                posterUsername: widget.feedData!.fullName,
-              ),
-              const SizedBox(width: 10),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomSpacer(8),
-                  Text(
-                    '${widget.feedData?.thumbsUp}',
-                    style: AppStyles.regularStringStyle(12, AppColors.black),
-                  ),
-                ],
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Row(
+              children: [
+                CustomAnimatedIcon(
+                  posterUsername: widget.feedData!.fullName,
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CustomSpacer(8),
+                    Text(
+                      '${widget.feedData?.thumbsUp}',
+                      style: AppStyles.regularStringStyle(12, AppColors.black),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           CustomSpacer(5),
-          ExpandablePanel(
-            header: RichText(
-              textScaleFactor: 1,
-              text: TextSpan(
-                text: '${widget.feedData?.feedName}  ',
-                style: AppStyles.regularStringStyle(15, AppColors.black),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: ExpandablePanel(
+              header: RichText(
+                textScaleFactor: 1,
+                text: TextSpan(
+                  text: '${widget.feedData?.feedName}  ',
+                  style: AppStyles.regularStringStyle(15, AppColors.black),
+                ),
               ),
-            ),
-            collapsed: Text(
-              '${widget.feedData?.feedDescription}',
-              softWrap: true,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            expanded: Text(
-              '${widget.feedData?.feedDescription}',
-              softWrap: true,
-            ),
-            theme: ExpandableThemeData(
-              iconPadding: const EdgeInsets.only(top: 0),
-              iconColor: AppColors.kPrimaryColor,
-              tapBodyToCollapse: true,
-              tapBodyToExpand: true,
-              tapHeaderToExpand: true,
-              iconSize: 35,
-              headerAlignment: ExpandablePanelHeaderAlignment.center,
-              iconPlacement: ExpandablePanelIconPlacement.right,
+              collapsed: Text(
+                '${widget.feedData?.feedDescription}',
+                softWrap: true,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              expanded: Text(
+                '${widget.feedData?.feedDescription}',
+                softWrap: true,
+              ),
+              theme: ExpandableThemeData(
+                iconPadding: const EdgeInsets.only(top: 0),
+                iconColor: AppColors.kPrimaryColor,
+                tapBodyToCollapse: true,
+                tapBodyToExpand: true,
+                tapHeaderToExpand: true,
+                iconSize: 35,
+                headerAlignment: ExpandablePanelHeaderAlignment.center,
+                iconPlacement: ExpandablePanelIconPlacement.right,
+              ),
             ),
           ),
           CustomSpacer(10),

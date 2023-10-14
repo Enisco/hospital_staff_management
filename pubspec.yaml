@@ -22,7 +22,7 @@ dependencies:
   go_router: ^11.1.2
   firebase_storage: ^11.2.7
   image_picker: ^1.0.4
-  intl: ^0.18.1
+  intl: ^0.18.0
   avatar_glow: ^2.0.2
   cached_network_image: ^3.3.0
   carousel_slider: ^4.2.1
