@@ -234,7 +234,7 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
                     selectNextShiftPeriod();
                   },
                   child: const Text(
-                    "Select Next Shift Period" ,
+                    "Select Next Shift Period",
                   ),
                 ),
                 CustomSpacer(20),
