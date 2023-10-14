@@ -117,8 +117,8 @@ class StaffCard extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: formatPeriod(
-                                  startDate: staffData.currentShift!.start!,
-                                  endDate: staffData.currentShift!.end!,
+                                  startDate: staffData.offPeriod!.start!,
+                                  endDate: staffData.offPeriod!.end!,
                                 ),
                                 style: AppStyles.keyStringStyle(
                                     14, AppColors.plainWhite),
