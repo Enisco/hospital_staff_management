@@ -199,7 +199,7 @@ class _CreateInsightPageViewState extends State<CreateInsightPageView> {
                           textEditingController:
                               _controller.insightsDescriptionController,
                           hintText: 'Write details here',
-                          textInputAction: TextInputAction.next,
+                          textInputAction: TextInputAction.done,
                           textMaxLength: 1000,
                         ),
                       ),

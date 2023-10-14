@@ -72,7 +72,7 @@ class _FeedsCardState extends State<FeedsCard> with TickerProviderStateMixin {
                     Row(
                       children: [
                         Text(
-                          '${widget.feedData?.username}',
+                          '${widget.feedData?.fullName}',
                           style:
                               AppStyles.regularStringStyle(14, AppColors.black),
                         ),
@@ -160,7 +160,7 @@ class _FeedsCardState extends State<FeedsCard> with TickerProviderStateMixin {
           Row(
             children: [
               CustomAnimatedIcon(
-                posterUsername: widget.feedData!.username,
+                posterUsername: widget.feedData!.fullName,
               ),
               const SizedBox(width: 10),
               Column(

@@ -8,7 +8,7 @@ String insightsFeedModelToJson(InsightsFeedModel data) =>
 
 class InsightsFeedModel {
   InsightsFeedModel({
-    required this.username,
+    required this.fullName,
     required this.thumbsUp,
     required this.feedCoverPictureLink,
     required this.feedName,
@@ -17,7 +17,7 @@ class InsightsFeedModel {
     required this.dateCreated,
   });
 
-  String username;
+  String fullName;
   int thumbsUp;
   List<String> feedCoverPictureLink;
   String feedName;
@@ -26,7 +26,7 @@ class InsightsFeedModel {
   String dateCreated;
 
   InsightsFeedModel copyWith({
-    String? username,
+    String? fullName,
     int? thumbsUp,
     List<String>? feedCoverPictureLink,
     String? feedName,
@@ -35,7 +35,7 @@ class InsightsFeedModel {
     String? dateCreated,
   }) =>
       InsightsFeedModel(
-        username: username ?? this.username,
+        fullName: fullName ?? this.fullName,
         thumbsUp: thumbsUp ?? this.thumbsUp,
         feedCoverPictureLink: feedCoverPictureLink ?? this.feedCoverPictureLink,
         feedName: feedName ?? this.feedName,
@@ -46,7 +46,7 @@ class InsightsFeedModel {
 
   factory InsightsFeedModel.fromJson(Map<String, dynamic> json) =>
       InsightsFeedModel(
-        username: json["username"],
+        fullName: json["full_name"],
         thumbsUp: json["thumbsUp"],
         feedCoverPictureLink:
             List<String>.from(json["feedCoverPictureLink"].map((x) => x)),
@@ -57,7 +57,7 @@ class InsightsFeedModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "username": username,
+        "full_name": fullName,
         "thumbsUp": thumbsUp,
         "feedCoverPictureLink":
             List<dynamic>.from(feedCoverPictureLink.map((x) => x)),

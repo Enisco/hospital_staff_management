@@ -49,6 +49,7 @@ class InsightsController extends GetxController {
 
     insightsFeedsRef.onChildAdded.listen(
       (event) {
+        log.wtf("Insights Data: ${event.snapshot.value.toString()}");
         InsightsFeedModel insightsFeed = insightsFeedModelFromJson(
           jsonEncode(event.snapshot.value).toString(),
         );
@@ -143,73 +144,80 @@ class InsightsController extends GetxController {
       update();
       createInsightsId = generateRandomInsightId();
 
-      /// Upload image to cloud storage
-      final firebaseStorage = FirebaseStorage.instance;
-      List<String> downloadUrls = [];
+      try {
+        /// Upload image to cloud storage
+        final firebaseStorage = FirebaseStorage.instance;
+        List<String> downloadUrls = [];
 
-      StaffAccountModel myAccountData = StaffAccountModel();
+        StaffAccountModel myAccountData = StaffAccountModel();
 
-      for (int index = 0; index < 4; index++) {
-        var snapshot = await firebaseStorage
-            .ref()
-            .child(
-                'hospital_staff_management/insights_data_images/$createInsightsId/${index + 1}')
-            .putFile(File(imageFilesSelected[index].path))
-            .whenComplete(() => log.w("Uploaded image ${index + 1}"));
+        for (int index = 0; index < imageFilesSelected.length; index++) {
+          var snapshot = await firebaseStorage
+              .ref()
+              .child(
+                  'hospital_staff_management/insights_data_images/$createInsightsId/${index + 1}')
+              .putFile(File(imageFilesSelected[index].path))
+              .whenComplete(() => log.w("Uploaded image ${index + 1}"));
 
-        /// Generate download links
-        var downloadUrl = await snapshot.ref.getDownloadURL();
-        downloadUrls.add(downloadUrl);
-      }
-      log.w("downloadUrls: $downloadUrls");
-      update();
-
-      String dateString = formatCurrentTime();
-      log.wtf("dateString: $dateString");
-
-      /// Get my details from RT Db
-      final getDataRef = FirebaseDatabase.instance.ref();
-      final getDataSnapshot = await getDataRef
-          .child('user_details/${GlobalVariables.myUsername}')
-          .get();
-
-      if (getDataSnapshot.exists) {
-        print("User exists: ${getDataSnapshot.value}");
-
-        StaffAccountModel userAccountModel = staffAccountModelFromJson(
-            jsonEncode(getDataSnapshot.value).toString());
-        log.w("Retrieved account name: ${userAccountModel.fullName}");
-
-        myAccountData = userAccountModel;
+          /// Generate download links
+          var downloadUrl = await snapshot.ref.getDownloadURL();
+          downloadUrls.add(downloadUrl);
+        }
+        log.w("downloadUrls: $downloadUrls");
         update();
+
+        String dateString = formatCurrentTime();
+        log.wtf("dateString: $dateString");
+
+        /// Get my details from RT Db
+        final getDataRef = FirebaseDatabase.instance.ref();
+        final getDataSnapshot = await getDataRef
+            .child('user_details/${GlobalVariables.myUsername}')
+            .get();
+
+        if (getDataSnapshot.exists) {
+          print("User exists: ${getDataSnapshot.value}");
+
+          StaffAccountModel userAccountModel = staffAccountModelFromJson(
+              jsonEncode(getDataSnapshot.value).toString());
+          log.w("Retrieved account name: ${userAccountModel.fullName}");
+
+          myAccountData = userAccountModel;
+          update();
+        }
+        log.wtf("myAccountData: ${myAccountData.toJson()}");
+
+        /// Map data
+        InsightsFeedModel insightsData = InsightsFeedModel(
+          fullName: myAccountData.fullName ?? GlobalVariables.myUsername,
+          thumbsUp: 0,
+          feedCoverPictureLink: downloadUrls,
+          feedName: insightsTitleController.text.trim(),
+          feedDescription: insightsDescriptionController.text.trim(),
+          userProfilePicsLink: myAccountData.image ??
+              dummyAvatarUrl(myAccountData.gender ?? 'male'),
+          dateCreated: dateString,
+        );
+
+        log.wtf('Insights Data to be uploaded: ${insightsData.toJson()}');
+
+        /// Upload data to firestore
+        DatabaseReference ref =
+            FirebaseDatabase.instance.ref("insights_feeds/$createInsightsId");
+
+        await ref.set(insightsData.toJson()).then((value) async {
+          log.w("Insight posted");
+          context.pop();
+        });
+      } catch (e) {
+        showCustomSnackBar(context, "Ensure all fields are filled", () {},
+            AppColors.fullBlack, 1000);
       }
-      log.wtf("myAccountData: ${myAccountData.toJson()}");
-
-      /// Map data
-      InsightsFeedModel insightsData = InsightsFeedModel(
-        username: GlobalVariables.myUsername,
-        thumbsUp: 0,
-        feedCoverPictureLink: downloadUrls,
-        feedName: insightsTitleController.text.trim(),
-        feedDescription: insightsDescriptionController.text.trim(),
-        userProfilePicsLink: myAccountData.image ??
-            dummyAvatarUrl(myAccountData.gender ?? 'male'),
-        dateCreated: dateString,
-      );
-
-      log.wtf('Insights Data to be uploaded: ${insightsData.toJson()}');
-
-      /// Upload data to firestore
-      DatabaseReference ref =
-          FirebaseDatabase.instance.ref("insights_feeds/$createInsightsId");
-
-      await ref.set(insightsData.toJson()).then((value) async {
-        log.w("Insight posted");
-        context.pop();
-      });
     } else {
       showCustomSnackBar(context, "Ensure all fields are filled", () {},
           AppColors.fullBlack, 1000);
     }
+    loading = false;
+    update();
   }
 }

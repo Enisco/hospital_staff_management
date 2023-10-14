@@ -345,7 +345,9 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
                                 child: Text(
                                   'Upload',
                                   style: AppStyles.regularStringStyle(
-                                      20, AppColors.plainWhite),
+                                    18,
+                                    AppColors.plainWhite,
+                                  ),
                                 ),
                                 onPressed: () {
                                   SystemChannels.textInput
