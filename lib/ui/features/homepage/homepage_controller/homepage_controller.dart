@@ -16,6 +16,9 @@ class HomepageController extends GetxController {
   StaffAccountModel? myData;
 
   getAllStaffsData() {
+    doneLoading = false;
+    update();
+    staffsData = [];
     final allStaffDetailsRef = FirebaseDatabase.instance.ref("staffs");
 
     allStaffDetailsRef.onChildAdded.listen(
@@ -30,6 +33,8 @@ class HomepageController extends GetxController {
         log.d("Going again");
       },
     );
+    doneLoading = true;
+    update();
   }
 
   getMyData() async {

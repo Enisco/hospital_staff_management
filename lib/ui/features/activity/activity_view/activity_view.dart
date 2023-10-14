@@ -39,36 +39,33 @@ class _ActivityPageViewState extends State<ActivityPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ConditionalWillPopScope(
-        onWillPop: () async {
-          Provider.of<CurrentPage>(context, listen: false)
-              .setCurrentPageIndex(0);
-          context.pop();
-          return false;
-        },
-        shouldAddCallback: true,
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size(screenSize(context).width, 60),
-            child: CustomAppbar(
-              title: AppKeyStrings.leaderboard,
-            ),
+    return ConditionalWillPopScope(
+      onWillPop: () async {
+        Provider.of<CurrentPage>(context, listen: false).setCurrentPageIndex(0);
+        context.pop();
+        return false;
+      },
+      shouldAddCallback: true,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size(screenSize(context).width, 60),
+          child: CustomAppbar(
+            title: AppKeyStrings.leaderboard,
           ),
-          bottomNavigationBar: CustomNavBar(
-            color: AppColors.plainWhite,
-          ),
-          // body: GetBuilder<ActivityController>(
-          //   init: ActivityController(),
-          //   builder: (_) {
-          //     return _controller.doneLoading
-          //         ? const LeaderboardView()
-          //         : const Center(
-          //             child: CircularProgressIndicator(),
-          //           );
-          //   },
-          // ),
         ),
+        bottomNavigationBar: CustomNavBar(
+          color: AppColors.plainWhite,
+        ),
+        // body: GetBuilder<ActivityController>(
+        //   init: ActivityController(),
+        //   builder: (_) {
+        //     return _controller.doneLoading
+        //         ? const LeaderboardView()
+        //         : const Center(
+        //             child: CircularProgressIndicator(),
+        //           );
+        //   },
+        // ),
       ),
     );
   }

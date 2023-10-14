@@ -27,6 +27,11 @@ class AppRouter {
         pageBuilder: (context, state) => CustomNormalTransition(
             child: const HomepageView(), key: state.pageKey),
       ),
+      // GoRoute(
+      //   path: '/editStaffSchedulePageView',
+      //   pageBuilder: (context, state) => CustomSlideTransition(
+      //       child: const EditStaffSchedulePageView(), key: state.pageKey),
+      // ),
       GoRoute(
         path: '/insightsPageView',
         pageBuilder: (context, state) => CustomNormalTransition(

@@ -37,27 +37,25 @@ class _HomepageViewState extends State<HomepageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ConditionalWillPopScope(
-        onWillPop: () async {
-          if (Platform.isAndroid) {
-            SystemNavigator.pop();
-          } else if (Platform.isIOS) {
-            exit(0);
-          }
-          return false;
-        },
-        shouldAddCallback: true,
-        child: Scaffold(
-          backgroundColor: Colors.grey[50],
-          extendBodyBehindAppBar: false,
-          bottomNavigationBar: CustomNavBar(
-            color: AppColors.plainWhite,
-          ),
-          body: GlobalVariables.accountType == "admin"
-              ? const AdminHomePage()
-              : const StaffHomePage(),
+    return ConditionalWillPopScope(
+      onWillPop: () async {
+        if (Platform.isAndroid) {
+          SystemNavigator.pop();
+        } else if (Platform.isIOS) {
+          exit(0);
+        }
+        return false;
+      },
+      shouldAddCallback: true,
+      child: Scaffold(
+        backgroundColor: Colors.grey[50],
+        extendBodyBehindAppBar: false,
+        bottomNavigationBar: CustomNavBar(
+          color: AppColors.plainWhite,
         ),
+        body: GlobalVariables.accountType == "admin"
+            ? const AdminHomePage()
+            : const StaffHomePage(),
       ),
     );
   }

@@ -39,63 +39,61 @@ class _InsightsPageViewState extends State<InsightsPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ConditionalWillPopScope(
-        onWillPop: () async {
-          Provider.of<CurrentPage>(context, listen: false)
-              .setCurrentPageIndex(0);
-          context.pop();
-          return false;
-        },
-        shouldAddCallback: true,
-        child: GetBuilder<InsightsController>(
-          init: InsightsController(),
-          builder: (_) {
-            return Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size(screenSize(context).width, 60),
-                child: const CustomAppbar(
-                  title: "Insights",
-                ),
+    return ConditionalWillPopScope(
+      onWillPop: () async {
+        Provider.of<CurrentPage>(context, listen: false)
+            .setCurrentPageIndex(0);
+        context.pop();
+        return false;
+      },
+      shouldAddCallback: true,
+      child: GetBuilder<InsightsController>(
+        init: InsightsController(),
+        builder: (_) {
+          return Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size(screenSize(context).width, 60),
+              child: const CustomAppbar(
+                title: "Insights",
               ),
-              bottomNavigationBar: CustomNavBar(
+            ),
+            bottomNavigationBar: CustomNavBar(
+              color: AppColors.plainWhite,
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.blue.shade700,
+              child: Icon(
+                Icons.post_add_rounded,
                 color: AppColors.plainWhite,
               ),
-              floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.blue.shade700,
-                child: Icon(
-                  Icons.post_add_rounded,
-                  color: AppColors.plainWhite,
-                ),
-                onPressed: () {
-                  log.w("Go to create Staff");
-                  context.push('/createInsightPageView');
-                },
-              ),
-              body: GestureDetector(
-                onTap: (() =>
-                    SystemChannels.textInput.invokeMethod('TextInput.hide')),
-                child: _controller.loading == true
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 3,
-                        ),
-                      )
-                    : ListView.builder(
-                        reverse: false,
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: _controller.feedData.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return FeedsCard(
-                            feedData: _controller.feedData[index],
-                          );
-                        },
+              onPressed: () {
+                log.w("Go to create Staff");
+                context.push('/createInsightPageView');
+              },
+            ),
+            body: GestureDetector(
+              onTap: (() =>
+                  SystemChannels.textInput.invokeMethod('TextInput.hide')),
+              child: _controller.loading == true
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
                       ),
-              ),
-            );
-          },
-        ),
+                    )
+                  : ListView.builder(
+                      reverse: false,
+                      physics: const ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _controller.feedData.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return FeedsCard(
+                          feedData: _controller.feedData[index],
+                        );
+                      },
+                    ),
+            ),
+          );
+        },
       ),
     );
   }

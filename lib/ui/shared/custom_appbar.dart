@@ -14,7 +14,7 @@ class CustomAppbar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       width: screenSize(context).width,
-      height: 60,
+      height: 100,
       decoration: BoxDecoration(
         color: appbarColor ?? AppColors.kPrimaryColor,
         borderRadius: const BorderRadius.only(
@@ -23,10 +23,13 @@ class CustomAppbar extends StatelessWidget {
         ),
       ),
       child: Center(
-        child: Text(
-          title ?? "HSMS",
-          style: AppStyles.regularStringStyle(
-              16, titleColor ?? AppColors.plainWhite),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 32),
+          child: Text(
+            title ?? "HSMS",
+            style: AppStyles.regularStringStyle(
+                18, titleColor ?? AppColors.plainWhite),
+          ),
         ),
       ),
     );
