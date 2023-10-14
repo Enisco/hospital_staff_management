@@ -200,14 +200,14 @@ class _CustomNavBarState extends State<CustomNavBar> {
                   currentPageIndexCheck == true
                       ? context.push(GlobalVariables.accountType == 'staff'
                           ? '/profilePageView'
-                          : '/addNewStaffPageView')
+                          : '/addStaffPageView')
                       : context.pushReplacement(
                           GlobalVariables.accountType == 'staff'
                               ? '/profilePageView'
-                              : '/addNewStaffPageView');
+                              : '/addStaffPageView');
                 } else {
                   print(
-                      'You are already in ${GlobalVariables.accountType == 'staff' ? "ProfilePageView" : ""}');
+                      'You are already in ${GlobalVariables.accountType == 'staff' ? "ProfilePageView" : "AddStaffPageView"}');
                 }
               },
               child: Container(

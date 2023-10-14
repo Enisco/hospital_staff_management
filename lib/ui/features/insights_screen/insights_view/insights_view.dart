@@ -29,6 +29,7 @@ class _InsightsPageViewState extends State<InsightsPageView> {
   void initState() {
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+    _controller.getFeeds();
   }
 
   @override
@@ -63,30 +64,34 @@ class _InsightsPageViewState extends State<InsightsPageView> {
                   floatingActionButton: FloatingActionButton(
                     backgroundColor: Colors.blue.shade700,
                     child: Icon(
-                      Icons.person_add_alt_outlined,
+                      Icons.post_add_rounded,
                       color: AppColors.plainWhite,
                     ),
                     onPressed: () {
                       log.w("Go to create Staff");
-                      context.push('/addStaffPageView');
+                      context.push('/createInsightPageView');
                     },
                   ),
                   body: GestureDetector(
                     onTap: (() => SystemChannels.textInput
                         .invokeMethod('TextInput.hide')),
-                    child: _controller.loading == true ? Center(child: CircularProgressIndicator(strokeWidth: 3,),) : 
-                    ListView.builder(
-                    reverse: false,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: _controller.feedData.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return FeedsCard(
-                        feedData: _controller.feedData[index],
-                      );
-                    },
-                  )
-                    ,
+                    child: _controller.loading == true
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                            ),
+                          )
+                        : ListView.builder(
+                            reverse: false,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _controller.feedData.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return FeedsCard(
+                                feedData: _controller.feedData[index],
+                              );
+                            },
+                          ),
                   ));
             }),
       ),

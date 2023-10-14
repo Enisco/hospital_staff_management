@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/ui/features/create_account/create_account_model/staff_account_model.dart';
 import 'package:hospital_staff_management/utils/extension_and_methods/string_cap_extensions.dart';
 import 'package:image_picker/image_picker.dart';
@@ -128,7 +127,7 @@ class CreateStaffAccountController extends GetxController {
           AppColors.fullBlack,
           1000,
         );
-        context.pop();
+        // context.pop();
       });
     } else {
       showCustomSnackBar(context, "Ensure all fields are filled", () {},

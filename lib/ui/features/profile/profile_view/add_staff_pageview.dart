@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
+import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navbar.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/page_index_class.dart';
 import 'package:hospital_staff_management/ui/features/profile/profile_controller/staff_controller.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
@@ -61,6 +62,9 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
             child: const CustomAppbar(
               title: "Add New Staff",
             ),
+          ),
+          bottomNavigationBar: CustomNavBar(
+            color: AppColors.plainWhite,
           ),
           body: GestureDetector(
             onTap: (() =>
@@ -336,6 +340,7 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
                             : CustomButton(
                                 styleBoolValue: true,
                                 width: screenSize(context).width * 0.5,
+                                height: 55,
                                 color: AppColors.kPrimaryColor,
                                 child: Text(
                                   'Upload',

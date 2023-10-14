@@ -13,12 +13,17 @@ class StaffCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2),
+      decoration: BoxDecoration(
+        color: AppColors.plainWhite,
+      ),
       child: ListTile(
         leading: Container(
-          height: 35,
-          width: 35,
+          height: 45,
+          width: 45,
           decoration: BoxDecoration(
+            border: Border.all(width: 1, color: Colors.blue.shade400),
             shape: BoxShape.circle,
+            color: AppColors.blueGray,
             image: DecorationImage(
               image: CachedNetworkImageProvider(
                 staffData.image ?? dummyAvatarUrl(staffData.image ?? 'male'),
@@ -32,15 +37,18 @@ class StaffCard extends StatelessWidget {
         ),
         subtitle: Text(
           staffData.department ?? '',
-          style: AppStyles.hintStringStyle(16),
+          style: AppStyles.hintStringStyle(13),
         ),
-        trailing: Text(
-          onDutyOrLeave(
-            leaveStart: staffData.offPeriod!.start!,
-            leaveEnd: staffData.offPeriod!.end!,
-          ),
-          style: AppStyles.hintStringStyle(16),
-        ),
+        trailing: staffData.offPeriod?.start == null
+            ? Text(
+                "Duty Unknown",
+                style: AppStyles.hintStringStyle(13),
+              )
+            : onDutyOrLeave(
+                leaveStart: staffData.offPeriod!.start!,
+                leaveEnd: staffData.offPeriod!.end!,
+                currentShift: staffData.currentShift!.shift!,
+              ),
       ),
     );
   }
@@ -50,11 +58,23 @@ String dummyAvatarUrl(String gender) => gender.toLowerCase() == 'male'
     ? 'https://s3.eu-central-1.amazonaws.com/uploads.mangoweb.org/shared-prod/visegradfund.org/uploads/2021/08/placeholder-male.jpg'
     : 'https://cityofwilliamsport.org/wp-content/uploads/2021/03/femalePlaceholder.jpg';
 
-String onDutyOrLeave(
-    {required DateTime leaveStart, required DateTime leaveEnd}) {
+Text onDutyOrLeave({
+  required DateTime leaveStart,
+  required DateTime leaveEnd,
+  required String currentShift,
+}) {
   if (DateTime.now().isAfter(leaveStart) && DateTime.now().isBefore(leaveEnd)) {
-    return "On Leave";
+    return Text(
+      "On Leave",
+      style: AppStyles.regularStringStyle(13, AppColors.gold),
+    );
   } else {
-    return "On Duty";
+    return Text(
+      currentShift,
+      style: AppStyles.regularStringStyle(
+        13,
+        Colors.green.shade800,
+      ),
+    );
   }
 }

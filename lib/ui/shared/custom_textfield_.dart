@@ -21,6 +21,7 @@ class CustomTextfield extends StatefulWidget {
       this.textEditingController,
       this.hasSuffixIcon = false,
       this.onSuffixIconPressed,
+      this.minimumHeight,
       this.suffixIcon,
       this.focusNode,
       this.initialValue,
@@ -53,6 +54,7 @@ class CustomTextfield extends StatefulWidget {
   final String? labelText;
   final String? prefixText;
   final String? initialValue;
+  final double? minimumHeight;
   final double? suffixIconSize;
   final double? letterSpacing;
   final String? suffixText;
@@ -95,7 +97,10 @@ class _CustomTextfieldState extends State<CustomTextfield> {
       controller: widget.textEditingController,
       maxLength: widget.textMaxLength,
       keyboardType: widget.keyboardType,
+      maxLines: widget.maxLines,
       decoration: InputDecoration(
+        
+          // constraints: BoxConstraints(minHeight: widget.minimumHeight ?? 0.0),
           labelText: widget.labelText,
           hintText: widget.hintText,
           fillColor: Colors.grey[200],
