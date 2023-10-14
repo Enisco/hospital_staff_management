@@ -54,6 +54,7 @@ class InsightsController extends GetxController {
   Future<void> refreshFeeds() async {
     loading = true;
     update();
+    feedData = [];
     final insightsFeedsRef = FirebaseDatabase.instance.ref("insights_feeds");
 
     insightsFeedsRef.onChildAdded.listen(
@@ -72,7 +73,7 @@ class InsightsController extends GetxController {
           update();
         }
 
-        loading = false;
+        loading = false;feedData = [];
         update();
         log.wtf("returned feeds: ${insightsFeed.toJson()}");
         log.d("Going again");

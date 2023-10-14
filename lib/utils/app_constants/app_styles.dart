@@ -49,16 +49,23 @@ class AppStyles {
         textcolor,
       );
 
-  static TextStyle hintStringStyle(double fontSize) => _base(
+  static TextStyle hintStringStyle(double fontSize, {Color? color}) => _base(
         fontSize,
         _regularWeight,
-        AppColors.darkGray,
+        color ?? AppColors.darkGray,
       );
 
-  static TextStyle floatingHintStringStyle(double fontSize) => _base(
+  static TextStyle floatingHintStringStyle(double fontSize, {Color? color}) =>
+      _base(
         fontSize,
         _regularWeight,
-        AppColors.lightGray.withOpacity(0.4),
+        color ?? AppColors.lightGray.withOpacity(0.4),
+      );
+
+  static TextStyle normalStringStyle(double fontSize, {Color? color}) => _base(
+        fontSize,
+        _regularWeight,
+        color ?? AppColors.plainWhite,
       );
 
   static TextStyle floatingHintStringStyleColored(

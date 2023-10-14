@@ -90,6 +90,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
       init: HomepageController(),
       builder: (_) {
         return Scaffold(
+          backgroundColor: AppColors.lightGray,
           appBar: PreferredSize(
             preferredSize: Size(screenSize(context).width, 60),
             child: const CustomAppbar(
@@ -102,6 +103,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 Container(
                   color: AppColors.lighterGray,
                   child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     reverse: false,
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,

@@ -30,9 +30,9 @@ class _FeedsCardState extends State<FeedsCard> with TickerProviderStateMixin {
     super.initState();
   }
 
-  String formatTime(String isoSateString) {
+  String formatTime(String isoDateString) {
     String formatTimeString =
-        "${DateFormat.yMMMEd().format(DateTime.parse(isoSateString))} ${DateFormat.jm().format(DateTime.parse(isoSateString))}";
+        "${DateFormat.yMMMEd().format(DateTime.parse(isoDateString))} ${DateFormat.jm().format(DateTime.parse(isoDateString))}";
     return formatTimeString;
   }
 
