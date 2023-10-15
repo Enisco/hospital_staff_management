@@ -123,10 +123,12 @@ class CurrentShift {
       );
 
   Map<String, dynamic> toJson() => {
-        "start":
-            "${start!.year.toString().padLeft(4, '0')}-${start!.month.toString().padLeft(2, '0')}-${start!.day.toString().padLeft(2, '0')}",
-        "end":
-            "${end!.year.toString().padLeft(4, '0')}-${end!.month.toString().padLeft(2, '0')}-${end!.day.toString().padLeft(2, '0')}",
+        // "start":
+        //     "${start!.year.toString().padLeft(4, '0')}-${start!.month.toString().padLeft(2, '0')}-${start!.day.toString().padLeft(2, '0')}",
+        // "end":
+        //     "${end!.year.toString().padLeft(4, '0')}-${end!.month.toString().padLeft(2, '0')}-${end!.day.toString().padLeft(2, '0')}",
+        "start": start?.toIso8601String(),
+        "end": end?.toIso8601String(),
         "shift": shift,
       };
 }
@@ -155,9 +157,11 @@ class OffPeriod {
       );
 
   Map<String, dynamic> toJson() => {
-        "start":
-            "${start!.year.toString().padLeft(4, '0')}-${start!.month.toString().padLeft(2, '0')}-${start!.day.toString().padLeft(2, '0')}",
-        "end":
-            "${end!.year.toString().padLeft(4, '0')}-${end!.month.toString().padLeft(2, '0')}-${end!.day.toString().padLeft(2, '0')}",
+        // "start":
+        //     "${start!.year.toString().padLeft(4, '0')}-${start!.month.toString().padLeft(2, '0')}-${start!.day.toString().padLeft(2, '0')}",
+        // "end":
+        //     "${end!.year.toString().padLeft(4, '0')}-${end!.month.toString().padLeft(2, '0')}-${end!.day.toString().padLeft(2, '0')}",
+        "start": start?.toIso8601String(),
+        "end": end?.toIso8601String(),
       };
 }

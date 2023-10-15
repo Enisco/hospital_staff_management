@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -17,7 +15,7 @@ import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 var log = getLogger('HomepageController');
 
-enum ShiftsPeriod { morning, afternoon, night, off, shift }
+enum ShiftsPeriod { morning, afternoon, night, off }
 
 class HomepageController extends GetxController {
   bool doneLoading = false;
@@ -31,7 +29,7 @@ class HomepageController extends GetxController {
 
   resetValues() {
     doneLoading = true;
-    selectedShift = ShiftsPeriod.shift;
+    selectedShift = null;
     shiftStartingDate = null;
     shiftEndingDate = null;
     offStartingDay = null;
@@ -40,7 +38,6 @@ class HomepageController extends GetxController {
     shiftDatesValid = null;
     offDatesValid = null;
     datesDoNotOverlap = null;
-    update();
   }
 
   bool checkDatesNotOverlap() {
@@ -79,14 +76,12 @@ class HomepageController extends GetxController {
     shiftEndingDate = currentShift.end;
     log.wtf(
         "Updated Staff Current Shift Schedule: ${shiftStartingDate?.toIso8601String()}");
-    update();
   }
 
   syncStaffOffPeriodSchedule(OffPeriod offPeriod) {
     offStartingDay = offPeriod.start;
     offEndingDay = offPeriod.end;
     log.wtf("Updated Staff Off Schedule: ${offStartingDay?.toIso8601String()}");
-    update();
   }
 
   // Update the data in the DB
@@ -96,13 +91,19 @@ class HomepageController extends GetxController {
   ) async {
     doneLoading = false;
     update();
-    DatabaseReference ref =
-        FirebaseDatabase.instance.ref('staffs/${updatedStaffData.username}');
+    try {
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref('staffs/${updatedStaffData.username}');
 
-    await ref.update(updatedStaffData.toJson()).then((value) async {
-      log.w("Staff Schedule Updated");
-      context.pop();
-    });
+      await ref.update(updatedStaffData.toJson()).then((value) async {
+        log.w("Staff Schedule Updated");
+        context.pop();
+        resetValues();
+        getAllStaffsData();
+      });
+    } catch (e) {
+      dateOverlapsError = 'Error updating staff schedule';
+    }
     doneLoading = true;
     update();
   }
@@ -111,10 +112,14 @@ class HomepageController extends GetxController {
     BuildContext context,
     StaffAccountModel staffData,
   ) {
-    if (shiftDatesValid == true && offDatesValid == true) {
+    if (shiftDatesValid != false && offDatesValid != false) {
       StaffAccountModel updatedStaffData = staffData.copyWith(
         currentShift: CurrentShift(
-          shift: selectedShift?.name.toString().toSentenceCase,
+          shift: selectedShift == ShiftsPeriod.off
+              ? shiftStartingDate != null
+                  ? staffData.currentShift?.shift
+                  : selectedShift?.name.toString().toSentenceCase
+              : selectedShift?.name.toString().toSentenceCase,
           start: shiftStartingDate,
           end: shiftEndingDate,
         ),
@@ -164,7 +169,7 @@ class HomepageController extends GetxController {
         await getDataRef.child('staffs/${GlobalVariables.myUsername}').get();
 
     if (getDataSnapshot.exists) {
-      print("User exists: ${getDataSnapshot.value}");
+      log.i("User exists: ${getDataSnapshot.value}");
 
       StaffAccountModel userAccountModel = staffAccountModelFromJson(
         jsonEncode(getDataSnapshot.value).toString(),
@@ -181,12 +186,15 @@ class HomepageController extends GetxController {
     List<DateTime>? selectedDateTime = await showOmniDateTimeRangePicker(
       context: context,
       startInitialDate: DateTime.now(),
-      startFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
+      // startFirstDate: DateTime(1600).subtract(const Duration(days: 7)),
+      startFirstDate: DateTime.now().subtract(const Duration(days: 7)),
       startLastDate: DateTime.now().add(
         const Duration(days: 3652),
       ),
       endInitialDate: DateTime.now(),
-      endFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
+
+      // endFirstDate: DateTime(1600).subtract(const Duration(days: 7)),
+      endFirstDate: DateTime.now().subtract(const Duration(days: 7)),
       endLastDate: DateTime.now().add(
         const Duration(days: 3652),
       ),
@@ -223,8 +231,8 @@ class HomepageController extends GetxController {
 
       if (startDayAndTime
               .add(const Duration(minutes: 1))
-              .isBefore(endDayAndTime) &&
-          endDayAndTime.isAfter(DateTime.now())) {
+              .isBefore(endDayAndTime)
+          ) {
         log.wtf("startDayAndTime is before endDayAndTime");
         allDatesValid = true;
       } else {
