@@ -152,6 +152,7 @@ class StaffCard extends StatelessWidget {
                                       ),
                                     ),
 
+                              // Check if Duty time is in the future
                               staffData.offPeriod?.start
                                           ?.isBefore(DateTime.now()) ==
                                       true
