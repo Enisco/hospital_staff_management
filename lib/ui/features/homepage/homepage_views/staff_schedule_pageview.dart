@@ -8,12 +8,15 @@ import 'package:hospital_staff_management/ui/features/create_account/create_acco
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/staffs_card.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
+import 'package:hospital_staff_management/ui/shared/custom_button.dart';
+import 'package:hospital_staff_management/ui/shared/gray_curved_container.dart';
 import 'package:hospital_staff_management/ui/shared/spacer.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_styles.dart';
 import 'package:hospital_staff_management/utils/extension_and_methods/full_screen_image.dart';
+import 'package:hospital_staff_management/utils/extension_and_methods/string_cap_extensions.dart';
 import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
-import 'package:omni_datetime_picker/omni_datetime_picker.dart';
+import 'package:intl/intl.dart';
 
 var log = getLogger('EditStaffSchedulePageView');
 
@@ -33,98 +36,17 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
   void initState() {
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+    if (widget.staffData.currentShift != null) {
+      _controller.syncStaffCurrentShiftSchedule(widget.staffData.currentShift!);
+    }
+    if (widget.staffData.offPeriod != null) {
+      _controller.syncStaffOffPeriodSchedule(widget.staffData.offPeriod!);
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  DateTime? shiftStartingDate, offStartingDay, shiftEndingDate, offEndingDay;
-  bool? allDatesValid;
-
-  Future<List<DateTime>?> selectDateRange(BuildContext context) async {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
-
-    List<DateTime>? selectedDateTime = await showOmniDateTimeRangePicker(
-      context: context,
-      startInitialDate: DateTime.now(),
-      startFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
-      startLastDate: DateTime.now().add(
-        const Duration(days: 3652),
-      ),
-      endInitialDate: DateTime.now(),
-      endFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
-      endLastDate: DateTime.now().add(
-        const Duration(days: 3652),
-      ),
-      is24HourMode: false,
-      isShowSeconds: false,
-      minutesInterval: 1,
-      secondsInterval: 1,
-      borderRadius: const BorderRadius.all(Radius.circular(16)),
-      constraints: const BoxConstraints(
-        maxWidth: 350,
-        maxHeight: 650,
-      ),
-      type: OmniDateTimePickerType.date,
-      transitionBuilder: (context, anim1, anim2, child) {
-        return FadeTransition(
-          opacity: anim1.drive(
-            Tween(
-              begin: 0,
-              end: 1,
-            ),
-          ),
-          child: child,
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 200),
-      barrierDismissible: true,
-    );
-
-    log.wtf('Time selected: $selectedDateTime');
-
-    if (selectedDateTime != null) {
-      var startDayAndTime = selectedDateTime[0];
-      var endDayAndTime = selectedDateTime[1];
-
-      if (startDayAndTime
-              .add(const Duration(minutes: 1))
-              .isBefore(endDayAndTime) &&
-          endDayAndTime.isAfter(DateTime.now())) {
-        log.wtf("startDayAndTime is before endDayAndTime");
-        allDatesValid = true;
-      } else {
-        log.w("Invalid date selected");
-        allDatesValid = false;
-      }
-      return selectedDateTime;
-    }
-    return null;
-  }
-
-  selectNextShiftPeriod() async {
-    List<DateTime>? shiftDateRange = await selectDateRange(context);
-    if (allDatesValid == true) {
-      shiftStartingDate = shiftDateRange![0];
-      shiftEndingDate = shiftDateRange[1];
-      log.wtf(
-          "shiftDate - start: $shiftStartingDate \t end: $shiftEndingDate ");
-    } else {
-      log.w("Invalid shift date selected");
-    }
-  }
-
-  selectNextOffPeriod() async {
-    List<DateTime>? offDateRange = await selectDateRange(context);
-    if (allDatesValid == true) {
-      offStartingDay = offDateRange![0];
-      offEndingDay = offDateRange[1];
-      log.wtf("offDate - start: $offStartingDay \t end: $offEndingDay ");
-    } else {
-      log.w("Invalid off date selected");
-    }
   }
 
   @override
@@ -228,22 +150,487 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
                     ],
                   ),
                 ),
-                CustomSpacer(40),
-                TextButton(
-                  onPressed: () async {
-                    selectNextShiftPeriod();
-                  },
-                  child: const Text(
-                    "Select Next Shift Period",
-                  ),
-                ),
                 CustomSpacer(20),
-                TextButton(
-                  onPressed: () async {
-                    selectNextShiftPeriod();
-                  },
-                  child: const Text(
-                    "Select Next Off Period",
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                  width: screenSize(context).width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Assign Shift",
+                        style: AppStyles.regularStringStyle(
+                            18, AppColors.fullBlack),
+                      ),
+                      SizedBox(
+                        width: screenSize(context).width,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      onTap: () {
+                                        _controller.selectedShift =
+                                            ShiftsPeriod.morning;
+                                        log.wtf(_controller.selectedShift);
+                                      },
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 2, vertical: 0),
+                                      title: Text(ShiftsPeriod.morning.name
+                                          .toString()
+                                          .toSentenceCase),
+                                      leading: Radio(
+                                        value: ShiftsPeriod.morning,
+                                        groupValue: _controller.selectedShift,
+                                        onChanged: (natural) {
+                                          setState(() {
+                                            _controller.selectedShift =
+                                                ShiftsPeriod.morning;
+                                            log.wtf(_controller.selectedShift);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    ListTile(
+                                      onTap: () {
+                                        _controller.selectedShift =
+                                            ShiftsPeriod.night;
+                                        log.wtf(_controller.selectedShift);
+                                      },
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 2, vertical: 0),
+                                      title: Text(ShiftsPeriod.night.name
+                                          .toString()
+                                          .toSentenceCase),
+                                      leading: Radio(
+                                        value: ShiftsPeriod.night,
+                                        groupValue: _controller.selectedShift,
+                                        onChanged: (natural) {
+                                          setState(() {
+                                            _controller.selectedShift =
+                                                ShiftsPeriod.night;
+                                            log.wtf(_controller.selectedShift);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: SizedBox(
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      onTap: () {
+                                        _controller.selectedShift =
+                                            ShiftsPeriod.afternoon;
+                                        log.wtf(_controller.selectedShift);
+                                      },
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 2, vertical: 0),
+                                      title: Text(ShiftsPeriod.afternoon.name
+                                          .toString()
+                                          .toSentenceCase),
+                                      leading: Radio(
+                                        value: ShiftsPeriod.afternoon,
+                                        groupValue: _controller.selectedShift,
+                                        onChanged: (natural) {
+                                          setState(() {
+                                            _controller.selectedShift =
+                                                ShiftsPeriod.afternoon;
+                                            log.wtf(_controller.selectedShift);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    ListTile(
+                                      onTap: () {
+                                        _controller.selectedShift =
+                                            ShiftsPeriod.off;
+                                        log.wtf(_controller.selectedShift);
+                                      },
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 2, vertical: 0),
+                                      title: Text(ShiftsPeriod.off.name
+                                          .toString()
+                                          .toSentenceCase),
+                                      leading: Radio(
+                                        value: ShiftsPeriod.off,
+                                        groupValue: _controller.selectedShift,
+                                        onChanged: (natural) {
+                                          setState(() {
+                                            _controller.selectedShift =
+                                                ShiftsPeriod.off;
+                                            log.wtf(_controller.selectedShift);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      CustomSpacer(20),
+                      _controller.selectedShift == null
+                          ? const SizedBox.shrink()
+                          : Column(
+                              children: [
+                                // For Next Shift Date Period Selection
+                                SizedBox(
+                                  child:
+                                      _controller.selectedShift ==
+                                              ShiftsPeriod.off
+                                          ? const SizedBox.shrink()
+                                          : Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Next ${_controller.selectedShift?.name.toString().toSentenceCase} Shift Period",
+                                                  style: AppStyles
+                                                      .regularStringStyle(18,
+                                                          AppColors.fullBlack),
+                                                ),
+                                                CustomSpacer(15),
+                                                InkWell(
+                                                  onTap: (() async {
+                                                    _controller
+                                                        .selectNextShiftPeriod(
+                                                            context);
+
+                                                    SystemChannels.textInput
+                                                        .invokeMethod(
+                                                            'TextInput.hide');
+                                                  }),
+                                                  child: CustomCurvedContainer(
+                                                    borderColor: _controller
+                                                                .shiftDatesValid ==
+                                                            false
+                                                        ? AppColors.coolRed
+                                                        : AppColors.transparent,
+                                                    width: screenSize(context)
+                                                        .width,
+                                                    height: _controller
+                                                                .shiftStartingDate ==
+                                                            null
+                                                        ? 61
+                                                        : 65,
+                                                    leftPadding: 23,
+                                                    child: _controller
+                                                                .shiftStartingDate ==
+                                                            null
+                                                        ? Row(
+                                                            children: [
+                                                              Text(
+                                                                "Select Next Shift Period",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style: AppStyles
+                                                                    .hintStringStyle(
+                                                                        13),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        : Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              SizedBox(
+                                                                width: screenSize(
+                                                                            context)
+                                                                        .width *
+                                                                    0.42,
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      'From:',
+                                                                      style: AppStyles
+                                                                          .hintStringStyle(
+                                                                              13),
+                                                                    ),
+                                                                    Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceAround,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Text(
+                                                                          DateFormat.yMMMEd()
+                                                                              .format(_controller.shiftStartingDate!),
+                                                                          style:
+                                                                              AppStyles.inputStringStyle(AppColors.fullBlack).copyWith(fontSize: 14),
+                                                                        ),
+                                                                        CustomSpacer(
+                                                                            8),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    'To:',
+                                                                    style: AppStyles
+                                                                        .hintStringStyle(
+                                                                            13),
+                                                                  ),
+                                                                  Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        DateFormat.yMMMEd()
+                                                                            .format(_controller.shiftEndingDate!),
+                                                                        style: AppStyles.inputStringStyle(AppColors.fullBlack).copyWith(
+                                                                            fontSize:
+                                                                                14),
+                                                                      ),
+                                                                      CustomSpacer(
+                                                                          8),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                  ),
+                                                ),
+                                                CustomSpacer(8),
+                                                Text(
+                                                  _controller.shiftDatesValid ==
+                                                          false
+                                                      ? "Ending date must be after the starting date"
+                                                      : "",
+                                                  style: AppStyles
+                                                      .floatingHintStringStyleColored(
+                                                          14,
+                                                          AppColors.coolRed),
+                                                ),
+                                                CustomSpacer(20),
+                                              ],
+                                            ),
+                                ),
+
+                                // For Next Off Date Period Selection
+                                SizedBox(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Next Off Period",
+                                        style: AppStyles.regularStringStyle(
+                                            18, AppColors.fullBlack),
+                                      ),
+                                      CustomSpacer(15),
+                                      InkWell(
+                                        onTap: (() async {
+                                          _controller
+                                              .selectNextOffPeriod(context);
+
+                                          SystemChannels.textInput
+                                              .invokeMethod('TextInput.hide');
+                                        }),
+                                        child: CustomCurvedContainer(
+                                          borderColor:
+                                              _controller.offDatesValid == false
+                                                  ? AppColors.coolRed
+                                                  : AppColors.transparent,
+                                          width: screenSize(context).width,
+                                          height:
+                                              _controller.offStartingDay == null
+                                                  ? 61
+                                                  : 65,
+                                          leftPadding: 23,
+                                          child: _controller.offStartingDay ==
+                                                  null
+                                              ? Row(
+                                                  children: [
+                                                    Text(
+                                                      "Select Next Off Period",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: AppStyles
+                                                          .hintStringStyle(13),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: screenSize(context)
+                                                              .width *
+                                                          0.42,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            'From:',
+                                                            style: AppStyles
+                                                                .hintStringStyle(
+                                                                    13),
+                                                          ),
+                                                          Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                DateFormat
+                                                                        .yMMMEd()
+                                                                    .format(_controller
+                                                                        .offStartingDay!),
+                                                                style: AppStyles.inputStringStyle(
+                                                                        AppColors
+                                                                            .fullBlack)
+                                                                    .copyWith(
+                                                                        fontSize:
+                                                                            14),
+                                                              ),
+                                                              CustomSpacer(8),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'To:',
+                                                          style: AppStyles
+                                                              .hintStringStyle(
+                                                                  13),
+                                                        ),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              DateFormat
+                                                                      .yMMMEd()
+                                                                  .format(_controller
+                                                                      .offEndingDay!),
+                                                              style: AppStyles
+                                                                      .inputStringStyle(
+                                                                          AppColors
+                                                                              .fullBlack)
+                                                                  .copyWith(
+                                                                      fontSize:
+                                                                          14),
+                                                            ),
+                                                            CustomSpacer(8),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                        ),
+                                      ),
+                                      CustomSpacer(8),
+                                      Text(
+                                        _controller.offDatesValid == false
+                                            ? "Ending date must be after the starting date"
+                                            : "",
+                                        style: AppStyles
+                                            .floatingHintStringStyleColored(
+                                                14, AppColors.coolRed),
+                                      ),
+                                      CustomSpacer(20),
+                                    ],
+                                  ),
+                                ),
+
+                                CustomSpacer(12),
+                                Center(
+                                  child: Text(
+                                    _controller.dateOverlapsError,
+                                    style: AppStyles
+                                        .floatingHintStringStyleColored(
+                                            14, AppColors.coolRed),
+                                  ),
+                                ),
+                                CustomSpacer(6),
+                                _controller.doneLoading == false
+                                    ? Center(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                          color: AppColors.kPrimaryColor,
+                                        ),
+                                      )
+                                    : Center(
+                                        child: CustomButton(
+                                          styleBoolValue: true,
+                                          width:
+                                              screenSize(context).width * 0.5,
+                                          height: 55,
+                                          color: AppColors.kPrimaryColor,
+                                          child: Text(
+                                            'Upload',
+                                            style: AppStyles.regularStringStyle(
+                                              18,
+                                              AppColors.plainWhite,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            SystemChannels.textInput
+                                                .invokeMethod('TextInput.hide');
+                                            _controller.createStaffSchedule(
+                                              context,
+                                              widget.staffData,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                              ],
+                            ),
+                    ],
                   ),
                 ),
               ],
