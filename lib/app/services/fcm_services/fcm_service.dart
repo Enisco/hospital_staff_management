@@ -23,13 +23,14 @@ class FcmService {
         receipientDeviceToken: receipientDeviceToken,
         notificationFrom: notificationFrom,
       );
+      log.wtf("sendIndiePushNotification resp: ${data.toString()}");
       PushNotificationModel pushNotificationModel =
           PushNotificationModel.fromJson(data);
       if (pushNotificationModel.success == 1) {
         return data;
       }
     } catch (e) {
-      log.wtf("Error sending notifications");
+      log.w("Error sending notifications");
       showCustomSnackBar(
         NavigationService.navigatorKey.currentContext!,
         "Error launching calls",
@@ -53,19 +54,21 @@ class FcmService {
     required String notificationFrom,
   }) async {
     var serverKey = await getFcmServerKey();
+    log.wtf("serverKey resp: $serverKey");
     if (serverKey == null) {
       return;
     }
+    log.w("Here >>>>>>>>>>>>>>");
 
     Map<String, String> header = {
       'Authorization': 'key=$serverKey',
       'Content-type': 'application/json',
       'Accept': '/',
     };
+    log.w("Okay -----------");
 
     var deviceToken = _pushMessagingNotification.deviceToken;
     GlobalVariables.myDeviceToken = deviceToken;
-    log.wtf("deviceToken: $deviceToken");
 
     var body = {
       "to": receipientDeviceToken,
@@ -73,10 +76,12 @@ class FcmService {
       "notification": {
         "title": "HSMS",
         "body":
-            "You have new notifications from ${notificationFrom.toSentenceCase}",
+            "You have new notifications from ${notificationFrom}",
         "sound": "default",
       },
     };
+    
+    log.w("yesssssss ==========");
 
     var data = await _networkHelper.postData(
       domain: _domain,
@@ -85,6 +90,7 @@ class FcmService {
       isJson: true,
       body: body,
     );
+    log.wtf("_networkHelper.postData resp: ${data.toString()}");
     return data;
   }
 
