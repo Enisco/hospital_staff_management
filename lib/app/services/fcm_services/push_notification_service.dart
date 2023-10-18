@@ -60,7 +60,9 @@ class PushNotificationService {
     );
 
     // To handle messages while your application is in foreground for android we listen to the onMessage stream.
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {});
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      await showNotification(message);
+    });
 
     // This is used to define the initialization settings for iOS and android
     var initializationSettingsAndroid =
@@ -80,5 +82,50 @@ class PushNotificationService {
 
     _flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: onSelectNotification);
+  }
+
+  Future showNotification(RemoteMessage message) async {
+    AndroidNotificationChannel channel = const AndroidNotificationChannel(
+      'fcm_default_channel',
+      'High Importance Notifications',
+      importance: Importance.high,
+    );
+
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    // Display the foreground notification
+    if (message.notification != null) {
+      RemoteNotification? notification = message.notification;
+
+      AndroidNotificationDetails androidPlatformChannelSpecifics =
+          AndroidNotificationDetails(
+        channel.id,
+        channel.name,
+        importance: Importance.max,
+        playSound: true,
+        channelDescription: channel.description,
+        priority: Priority.high,
+        ongoing: true,
+        color: Colors.blue.shade900,
+        styleInformation: const BigTextStyleInformation(''),
+      );
+
+      var iOSChannelSpecifics = const DarwinNotificationDetails();
+      var platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSChannelSpecifics,
+      );
+
+      await _flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification?.title,
+        notification?.body,
+        platformChannelSpecifics,
+        payload: jsonEncode(message.data),
+      );
+    }
   }
 }
