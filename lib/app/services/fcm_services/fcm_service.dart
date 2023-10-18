@@ -18,6 +18,7 @@ class FcmService {
     required String notificationFrom,
   }) async {
     try {
+      log.w("Attempting to send notification");
       var data = await _sendIndiePushNotification(
         receipientDeviceToken: receipientDeviceToken,
         notificationFrom: notificationFrom,
@@ -28,7 +29,7 @@ class FcmService {
         return data;
       }
     } catch (e) {
-      log.w("Error sending notifications");
+      log.wtf("Error sending notifications");
       showCustomSnackBar(
         NavigationService.navigatorKey.currentContext!,
         "Error launching calls",
@@ -45,7 +46,7 @@ class FcmService {
   final url = "https://fcm.googleapis.com/fcm/send";
   final _domain = "fcm.googleapis.com";
   final _subDomain = "fcm/send";
-  
+
   // Method to send push notification
   Future _sendIndiePushNotification({
     required String receipientDeviceToken,

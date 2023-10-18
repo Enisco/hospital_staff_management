@@ -87,6 +87,7 @@ class LoginController extends GetxController {
       log.d("User exists: ${snapshot.value}");
       AdminAccountModel adminLoginData =
           adminAccountModelFromJson(jsonEncode(snapshot.value).toString());
+      GlobalVariables.myFullName = adminLoginData.fullName ?? '';
       log.d(
           "adminLoginData: ${adminLoginData.toJson()} \nPassword Existing: ${adminLoginData.password}");
       if (adminLoginData.password == passwordController.text.trim()) {
@@ -94,7 +95,7 @@ class LoginController extends GetxController {
         update();
         GlobalVariables.myUsername = usernameController.text.trim();
         log.d("GlobalVariables Username: ${GlobalVariables.myUsername}");
-        GlobalVariables.accountType = "admin";
+        GlobalVariables.accountType = "admin"; 
         saveSharedPrefsStringValue(
             "myUsername", usernameController.text.trim());
         saveSharedPrefsStringValue("accountType", "admin");
@@ -124,6 +125,7 @@ class LoginController extends GetxController {
       StaffAccountModel userAccountModel = staffAccountModelFromJson(
         jsonEncode(snapshot.value).toString(),
       );
+      GlobalVariables.myFullName = userAccountModel.fullName ?? '';
       log.d(
           "UserAccountModel: ${userAccountModel.toJson()} \nPassword Existing: ${userAccountModel.password}");
       if (userAccountModel.password == passwordController.text.trim()) {

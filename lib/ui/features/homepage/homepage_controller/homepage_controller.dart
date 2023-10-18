@@ -114,15 +114,17 @@ class HomepageController extends GetxController {
           FirebaseDatabase.instance.ref('staffs/${updatedStaffData.username}');
 
       await ref.update(updatedStaffData.toJson()).then((value) async {
-        log.w("Staff Schedule Updated");
-
         // Send Notification to the Staff
-        if (updatedStaffData.deviceToken == null) {
+        if (updatedStaffData.deviceToken != null) {
+          log.w("Device token found");
           FcmService().sendPushNotification(
             receipientDeviceToken: updatedStaffData.deviceToken!,
-            notificationFrom: GlobalVariables.accountType,
+            notificationFrom: GlobalVariables.myFullName,
           );
+        } else {
+          log.w("No device token found");
         }
+        log.w("Staff Schedule Updated");
         context.pop();
         resetValues();
         getAllStaffsData();
