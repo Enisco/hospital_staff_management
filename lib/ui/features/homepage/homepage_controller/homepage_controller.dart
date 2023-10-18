@@ -167,9 +167,36 @@ class HomepageController extends GetxController {
     }
   }
 
+  updateDeviceFcmToken() async {
+    final pushMessagingNotification = locator<PushNotificationService>();
+    try {
+      var deviceToken = pushMessagingNotification.deviceToken;
+      GlobalVariables.myDeviceToken = deviceToken;
+      log.wtf("GlobalVariables DeviceToken: ${GlobalVariables.myDeviceToken}");
+      UpdateDeviceTokenModel deviceTokenData = UpdateDeviceTokenModel(
+        deviceToken: deviceToken,
+      );
+      DatabaseReference ref;
+
+      if (GlobalVariables.myUsername.contains("admin") == true) {
+        ref = FirebaseDatabase.instance.ref(GlobalVariables.myUsername);
+      } else {
+        ref = FirebaseDatabase.instance
+            .ref('staffs/${GlobalVariables.myUsername}');
+      }
+
+      await ref.update(deviceTokenData.toJson()).then((value) async {
+        log.w("My DeviceToken Updated");
+      });
+    } catch (e) {
+      log.w("Error updating deviceToken: ${e.toString()}");
+    }
+  }
+
   getAllStaffsData() {
     doneLoading = false;
     update();
+    updateDeviceFcmToken();
     staffsData = [];
     final allStaffDetailsRef = FirebaseDatabase.instance.ref("staffs");
 
@@ -179,10 +206,10 @@ class HomepageController extends GetxController {
             jsonEncode(event.snapshot.value).toString());
         staffsData.add(staffDetails);
 
-        doneLoading = true;
-        update();
         log.wtf("returned feeds: ${staffDetails.toJson()}");
         log.d("Going again");
+        doneLoading = true;
+        update();
       },
     );
     doneLoading = true;
@@ -190,6 +217,9 @@ class HomepageController extends GetxController {
   }
 
   getMyData() async {
+    doneLoading = false;
+    update();
+    updateDeviceFcmToken();
     final getDataRef = FirebaseDatabase.instance.ref();
     final getDataSnapshot =
         await getDataRef.child('staffs/${GlobalVariables.myUsername}').get();
@@ -204,6 +234,8 @@ class HomepageController extends GetxController {
       doneLoading = true;
       update();
     }
+    doneLoading = true;
+    update();
   }
 
   Future<List<DateTime>?> selectDateRange(BuildContext context) async {
@@ -302,26 +334,5 @@ class HomepageController extends GetxController {
       // update();
     }
     update();
-  }
-
-  updateDeviceFcmToken() async {
-    final _pushMessagingNotification = locator<PushNotificationService>();
-    try {
-      var deviceToken = _pushMessagingNotification.deviceToken;
-      GlobalVariables.myDeviceToken = deviceToken;
-      log.wtf("GlobalVariables DeviceToken: ${GlobalVariables.myDeviceToken}");
-      UpdateDeviceTokenModel deviceTokenData = UpdateDeviceTokenModel(
-        deviceToken: deviceToken,
-      );
-
-      DatabaseReference ref =
-          FirebaseDatabase.instance.ref('staffs/${GlobalVariables.myUsername}');
-
-      await ref.update(deviceTokenData.toJson()).then((value) async {
-        log.w("Staff Schedule Updated");
-      });
-    } catch (e) {
-      log.w("Error updating deviceToken: ${e.toString()}");
-    }
   }
 }

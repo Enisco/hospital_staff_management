@@ -13,8 +13,7 @@ import 'package:hospital_staff_management/ui/features/splash_screen/splash_scree
 class AppRouter {
   static final router = GoRouter(
     navigatorKey: NavigationService.navigatorKey,
-    // initialLocation: '/signInView',
-    // initialLocation: '/homepageView',
+    initialLocation: '/signInView',
     routes: [
       GoRoute(
         path: '/',
