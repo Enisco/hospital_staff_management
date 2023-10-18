@@ -212,8 +212,29 @@ class HomepageController extends GetxController {
         log.d("Going again");
         doneLoading = true;
         update();
+
+        /// Sort: If user,  Put user data object first,
+        /// arrange others in alphabetical order.
+
+        // if (GlobalVariables.accountType.contains("admin") == false) {
+        log.wtf("Sorting list now");
+        staffsData.sort((a, b) {
+          if (a.username == GlobalVariables.myUsername &&
+              b.username == GlobalVariables.myUsername) {
+            return a.fullName!.compareTo(b.fullName!);
+          } else if (a.username == GlobalVariables.myUsername) {
+            return -1;
+          } else if (b.username == GlobalVariables.myUsername) {
+            return 1;
+          } else {
+            return a.fullName!.compareTo(b.fullName!);
+          }
+        });
+        log.wtf(staffsData.first);
+        // }
       },
     );
+
     doneLoading = true;
     update();
   }

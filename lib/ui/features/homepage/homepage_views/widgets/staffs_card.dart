@@ -5,6 +5,7 @@ import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/ui/features/create_account/create_account_model/staff_account_model.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/staff_schedule_pageview.dart';
+import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_styles.dart';
 import 'package:hospital_staff_management/utils/extension_and_methods/full_screen_image.dart';
@@ -46,7 +47,9 @@ class StaffCard extends StatelessWidget {
       builder: (_) {
         return InkWell(
           onTap: () {
-            gotoEditSchedulePage(context, staffData);
+            GlobalVariables.accountType.contains("admin") == true
+                ? gotoEditSchedulePage(context, staffData)
+                : log.w("Staff cannot access this function");
           },
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 2),
@@ -91,11 +94,18 @@ class StaffCard extends StatelessWidget {
                     staffData.department ?? '',
                     style: AppStyles.hintStringStyle(13),
                   ),
-                  trailing: onDutyOrLeave(
-                    shiftStart: staffData.currentShift?.start,
-                    shiftEnd: staffData.currentShift?.end,
-                    leaveStart: staffData.offPeriod?.start,
-                    leaveEnd: staffData.offPeriod?.end,
+                  trailing: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColors.darkGray),
+                    ),
+                    child: onDutyOrLeave(
+                      shiftStart: staffData.currentShift?.start,
+                      shiftEnd: staffData.currentShift?.end,
+                      leaveStart: staffData.offPeriod?.start,
+                      leaveEnd: staffData.offPeriod?.end,
+                    ),
                   ),
                 ),
 

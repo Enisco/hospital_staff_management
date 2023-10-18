@@ -8,10 +8,12 @@ import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navbar.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/staffs_card.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/user_schedule_card.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/ui/shared/spacer.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
+import 'package:hospital_staff_management/utils/app_constants/app_styles.dart';
 import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
 
 var log = getLogger('HomepageView');
@@ -134,7 +136,8 @@ class _StaffHomePageState extends State<StaffHomePage> {
   void initState() {
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    _controller.getMyData();
+    _controller.getAllStaffsData();
+    // _controller.getMyData();
   }
 
   @override
@@ -156,17 +159,35 @@ class _StaffHomePageState extends State<StaffHomePage> {
             ),
           ),
           body: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-            ),
             child: Column(
               children: [
-                CustomSpacer(20),
-                Center(
-                  child: Text(
-                    _controller.myData?.fullName ?? "No data",
+                CustomSpacer(10),
+                UserScheduleCard(staffData: _controller.staffsData[0]),
+                CustomSpacer(15),
+                Row(
+                  children: [
+                    Text(
+                      "  Other Staff Schedules",
+                      style:
+                          AppStyles.regularStringStyle(16, AppColors.fullBlack),
+                    ),
+                  ],
+                ),
+                Container(
+                  color: AppColors.lighterGray,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    reverse: false,
+                    physics: const ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: _controller.staffsData.length - 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      return StaffCard(
+                        staffData: _controller.staffsData[index + 1],
+                      );
+                    },
                   ),
-                )
+                ),
               ],
             ),
           ),
