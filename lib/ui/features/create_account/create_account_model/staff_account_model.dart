@@ -16,6 +16,7 @@ class StaffAccountModel {
   String? email;
   String? image;
   String? department;
+  String? deviceToken;
   OffPeriod? offPeriod;
   CurrentShift? currentShift;
 
@@ -29,6 +30,7 @@ class StaffAccountModel {
     this.email,
     this.image,
     this.department,
+    this.deviceToken,
     this.offPeriod,
     this.currentShift,
   });
@@ -43,6 +45,7 @@ class StaffAccountModel {
     String? email,
     String? image,
     String? department,
+    String? deviceToken,
     OffPeriod? offPeriod,
     CurrentShift? currentShift,
   }) =>
@@ -56,6 +59,7 @@ class StaffAccountModel {
         email: email ?? this.email,
         image: image ?? this.image,
         department: department ?? this.department,
+        deviceToken: deviceToken ?? this.deviceToken,
         offPeriod: offPeriod ?? this.offPeriod,
         currentShift: currentShift ?? this.currentShift,
       );
@@ -71,6 +75,7 @@ class StaffAccountModel {
         email: json["email"],
         image: json["image"],
         department: json["department"],
+        deviceToken: json["device_token"],
         offPeriod: json["off_period"] == null
             ? null
             : OffPeriod.fromJson(json["off_period"]),
@@ -89,6 +94,7 @@ class StaffAccountModel {
         "email": email,
         "image": image,
         "department": department,
+        "device_token": deviceToken,
         "off_period": offPeriod?.toJson(),
         "current_shift": currentShift?.toJson(),
       };

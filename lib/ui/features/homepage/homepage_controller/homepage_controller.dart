@@ -3,8 +3,12 @@ import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hospital_staff_management/app/resources/app.locator.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
+import 'package:hospital_staff_management/app/services/fcm_services/fcm_service.dart';
+import 'package:hospital_staff_management/app/services/fcm_services/push_notification_service.dart';
 import 'package:hospital_staff_management/ui/features/create_account/create_account_model/staff_account_model.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_model/update_user_model.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -111,6 +115,14 @@ class HomepageController extends GetxController {
 
       await ref.update(updatedStaffData.toJson()).then((value) async {
         log.w("Staff Schedule Updated");
+
+        // Send Notification to the Staff
+        if (updatedStaffData.deviceToken == null) {
+          FcmService().sendPushNotification(
+            receipientDeviceToken: updatedStaffData.deviceToken!,
+            notificationFrom: GlobalVariables.accountType,
+          );
+        }
         context.pop();
         resetValues();
         getAllStaffsData();
@@ -290,5 +302,26 @@ class HomepageController extends GetxController {
       // update();
     }
     update();
+  }
+
+  updateDeviceFcmToken() async {
+    final _pushMessagingNotification = locator<PushNotificationService>();
+    try {
+      var deviceToken = _pushMessagingNotification.deviceToken;
+      GlobalVariables.myDeviceToken = deviceToken;
+      log.wtf("GlobalVariables DeviceToken: ${GlobalVariables.myDeviceToken}");
+      UpdateDeviceTokenModel deviceTokenData = UpdateDeviceTokenModel(
+        deviceToken: deviceToken,
+      );
+
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref('staffs/${GlobalVariables.myUsername}');
+
+      await ref.update(deviceTokenData.toJson()).then((value) async {
+        log.w("Staff Schedule Updated");
+      });
+    } catch (e) {
+      log.w("Error updating deviceToken: ${e.toString()}");
+    }
   }
 }
