@@ -9,9 +9,20 @@ final appThemeData = ThemeData(
       statusBarColor: Colors.grey[50],
       statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.grey[50],
+      systemNavigationBarColor: Colors.grey,
+      systemNavigationBarIconBrightness: Brightness.light,
     ),
   ),
+
+  // navigationBarTheme: NavigationBarThemeData(
+
+  //   systemOverlayStyle: const SystemUiOverlayStyle().copyWith(
+  //     statusBarColor: Colors.grey[50],
+  //     statusBarBrightness: Brightness.light,
+  //     statusBarIconBrightness: Brightness.dark,
+  //     systemNavigationBarColor: Colors.grey[50],
+  //   ),
+  // ),
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: {
       // TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),

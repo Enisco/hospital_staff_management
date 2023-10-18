@@ -149,7 +149,7 @@ class _StaffHomePageState extends State<StaffHomePage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomepageController>(
-      init: HomepageController(),
+      init: _controller,
       builder: (_) {
         return Scaffold(
           appBar: PreferredSize(
@@ -158,39 +158,47 @@ class _StaffHomePageState extends State<StaffHomePage> {
               title: "My Schedules",
             ),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                CustomSpacer(10),
-                UserScheduleCard(staffData: _controller.staffsData[0]),
-                CustomSpacer(15),
-                Row(
-                  children: [
-                    Text(
-                      "  Other Staff Schedules",
-                      style:
-                          AppStyles.regularStringStyle(16, AppColors.fullBlack),
-                    ),
-                  ],
-                ),
-                Container(
-                  color: AppColors.lighterGray,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    reverse: false,
-                    physics: const ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: _controller.staffsData.length - 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      return StaffCard(
-                        staffData: _controller.staffsData[index + 1],
-                      );
-                    },
+          body: _controller.doneLoading == false ||
+                  _controller.staffsData.length <= 0
+              ? Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    color: AppColors.kPrimaryColor,
+                  ),
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CustomSpacer(10),
+                      UserScheduleCard(staffData: _controller.staffsData[0]),
+                      CustomSpacer(15),
+                      Row(
+                        children: [
+                          Text(
+                            "  Other Staff Schedules",
+                            style: AppStyles.regularStringStyle(
+                                16, AppColors.fullBlack),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        color: AppColors.lighterGray,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          reverse: false,
+                          physics: const ClampingScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: _controller.staffsData.length - 1,
+                          itemBuilder: (BuildContext context, int index) {
+                            return StaffCard(
+                              staffData: _controller.staffsData[index + 1],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
         );
       },
     );

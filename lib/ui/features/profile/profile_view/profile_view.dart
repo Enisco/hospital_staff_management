@@ -10,13 +10,12 @@ import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navb
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/page_index_class.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/staffs_card.dart';
 import 'package:hospital_staff_management/ui/features/profile/profile_controller/profile_controller.dart';
-import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
-import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/ui/shared/spacer.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_styles.dart';
 import 'package:hospital_staff_management/utils/extension_and_methods/full_screen_image.dart';
 import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 var log = getLogger('ProfilePageView');
@@ -43,6 +42,15 @@ class _ProfilePageViewState extends State<ProfilePageView> {
     super.dispose();
   }
 
+  String formatPeriod({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    String formattedDateString =
+        "${DateFormat.yMMMEd().format(startDate)} - ${DateFormat.yMMMEd().format(endDate)}";
+    return formattedDateString;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ConditionalWillPopScope(
@@ -52,45 +60,75 @@ class _ProfilePageViewState extends State<ProfilePageView> {
         return false;
       },
       shouldAddCallback: true,
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: PreferredSize(
-          preferredSize: Size(screenSize(context).width, 60),
-          child: const CustomAppbar(
-            title: "Profile",
-          ),
-        ),
-        bottomNavigationBar: CustomNavBar(
-          color: AppColors.plainWhite,
-        ),
-        body: SingleChildScrollView(
-          child: GetBuilder<ProfileController>(
-            init: ProfileController(),
-            builder: (_) {
-              return Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 250,
-                      padding:
-                          const EdgeInsets.only(top: 120, left: 20, right: 20),
-                      decoration: BoxDecoration(
-                        color: AppColors.kPrimaryColor,
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(50),
-                          bottomRight: Radius.circular(50),
+      child: GetBuilder<ProfileController>(
+          init: ProfileController(),
+          builder: (_) {
+            return Scaffold(
+              extendBodyBehindAppBar: false,
+              appBar: PreferredSize(
+                preferredSize: Size(screenSize(context).width, 430),
+                child: Container(
+                  height: 430,
+                  padding: const EdgeInsets.only(top: 70, left: 20, right: 20),
+                  decoration: BoxDecoration(
+                    color: AppColors.kPrimaryColor,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        _controller.myAccountData.fullName ?? "HSMS",
+                        style: AppStyles.regularStringStyle(
+                            18, AppColors.plainWhite),
+                      ),
+                      CustomSpacer(20),
+                      InkWell(
+                        onTap: () => showFullScreenImage(
+                          context,
+                          _controller.myAccountData.image ??
+                              dummyAvatarUrl(
+                                _controller.myAccountData.image ?? 'male',
+                              ),
+                        ),
+                        child: CircleAvatar(
+                          backgroundColor: AppColors.blueGray,
+                          radius: 80,
+                          backgroundImage: CachedNetworkImageProvider(
+                            _controller.myAccountData.image ??
+                                dummyAvatarUrl(
+                                  _controller.myAccountData.gender ?? 'male',
+                                ),
+                          ),
                         ),
                       ),
-                      child: Row(
+                      CustomSpacer(15),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          SizedBox(),
                           SizedBox(
-                            height: 90,
+                            height: 120,
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      CupertinoIcons.person_alt_circle,
+                                      color: AppColors.plainWhite,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      _controller.myAccountData.username ?? '',
+                                      style: AppStyles.regularStringStyle(
+                                          14, AppColors.plainWhite),
+                                    ),
+                                  ],
+                                ),
                                 Row(
                                   children: [
                                     Icon(Icons.phone_in_talk_outlined,
@@ -136,175 +174,314 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                               ],
                             ),
                           ),
-                          InkWell(
-                            onTap: () => showFullScreenImage(
-                              context,
-                              _controller.myAccountData.image ??
-                                  dummyAvatarUrl(
-                                    _controller.myAccountData.image ?? 'male',
+                          SizedBox(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              bottomNavigationBar: CustomNavBar(
+                color: AppColors.plainWhite,
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CustomSpacer(20),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 2),
+                      decoration: BoxDecoration(
+                        color: AppColors.kPrimaryColor,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          /// Check if schedules exist,
+                          /// If exists, check if the shift and off end dates are not before today
+                          (_controller.myAccountData.offPeriod?.start == null &&
+                                      _controller.myAccountData.currentShift
+                                              ?.start ==
+                                          null) ||
+                                  (_controller.myAccountData.offPeriod?.end
+                                              ?.isBefore(DateTime.now()) ==
+                                          true &&
+                                      _controller
+                                              .myAccountData.currentShift?.end
+                                              ?.isBefore(DateTime.now()) ==
+                                          true)
+                              ? const SizedBox.shrink()
+                              : Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 20),
+                                  width: screenSize(context).width,
+                                  color: AppColors.plainWhite,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Check if Duty time is in the future
+
+                                      _controller.myAccountData.currentShift
+                                                  ?.start ==
+                                              null
+                                          ? const SizedBox.shrink()
+                                          : RichText(
+                                              text: TextSpan(
+                                                text: (DateTime.now().isAtSameMomentAs(
+                                                                _controller
+                                                                    .myAccountData
+                                                                    .currentShift!
+                                                                    .start!) ==
+                                                            true ||
+                                                        DateTime.now().isAfter(
+                                                                _controller
+                                                                    .myAccountData
+                                                                    .currentShift!
+                                                                    .start!) ==
+                                                            true)
+                                                    ? "Current Shift: "
+                                                    : "Next Shift: ",
+                                                style: AppStyles.subStringStyle(
+                                                  14,
+                                                  AppColors.kPrimaryColor,
+                                                ),
+                                                children: [
+                                                  TextSpan(
+                                                    text: DateTime.now().isAfter(
+                                                                _controller
+                                                                    .myAccountData
+                                                                    .currentShift!
+                                                                    .end!) ==
+                                                            true
+                                                        ? "Unspecified"
+                                                        : _controller
+                                                                    .myAccountData
+                                                                    .currentShift
+                                                                    ?.start ==
+                                                                null
+                                                            ? "Unspecified"
+                                                            : _controller
+                                                                .myAccountData
+                                                                .currentShift!
+                                                                .shift,
+                                                    style: AppStyles
+                                                        .keyStringStyle(
+                                                      14,
+                                                      AppColors.kPrimaryColor,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                    ],
                                   ),
-                            ),
-                            child: CircleAvatar(
-                              backgroundColor: AppColors.blueGray,
-                              radius: 50,
-                              backgroundImage: CachedNetworkImageProvider(
-                                _controller.myAccountData.image ??
-                                    dummyAvatarUrl(
-                                      _controller.myAccountData.gender ??
-                                          'male',
-                                    ),
-                              ),
-                            ),
-                          ),
+                                ),
                         ],
                       ),
                     ),
+                    CustomSpacer(5),
                     Container(
-                      height: 180,
-                      width: 180,
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(colors: [
-                            Colors.green,
-                            Colors.yellow,
-                            Colors.red,
-                            Colors.purple
-                          ]),
-                          shape: BoxShape.circle),
-                      child: Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: Container(
-                          padding: const EdgeInsets.all(2.0),
-                          decoration: BoxDecoration(
-                            color: AppColors.plainWhite,
-                            shape: BoxShape.circle,
-                          ),
-                          child: _controller.myAccountData.image == '' ||
-                                  _controller.myAccountData.image == null
-                              ? CircularProgressIndicator(
-                                  color: AppColors.kPrimaryColor,
-                                )
-                              : CircleAvatar(
-                                  backgroundColor: AppColors.blueGray,
-                                  foregroundImage: CachedNetworkImageProvider(
-                                    _controller.myAccountData.image!,
-                                  ),
-                                ),
-                        ),
+                      margin: const EdgeInsets.symmetric(vertical: 2),
+                      decoration: BoxDecoration(
+                        color: AppColors.plainWhite,
+                        borderRadius: BorderRadius.circular(3),
                       ),
-                    ),
-                    CustomSpacer(20),
-                    Text(
-                      GlobalVariables.myUsername,
-                      style: AppStyles.keyStringStyle(
-                        18,
-                        AppColors.fullBlack,
-                      ),
-                    ),
-                    _controller.detailsLoaded == true
-                        ? Column(
-                            children: [
-                              CustomSpacer(5),
-                              Text(
-                                "${_controller.myAccountData.fullName}",
-                                style: TextStyle(
-                                  color: Colors.purple.shade300,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              CustomSpacer(30),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
+                      child: Column(
+                        children: [
+                          /// Check if schedules exist,
+                          /// If exists, check if the shift and off end dates are not before today
+                          (_controller.myAccountData.offPeriod?.start == null &&
+                                      _controller.myAccountData.currentShift
+                                              ?.start ==
+                                          null) ||
+                                  (_controller.myAccountData.offPeriod?.end
+                                              ?.isBefore(DateTime.now()) ==
+                                          true &&
+                                      _controller
+                                              .myAccountData.currentShift?.end
+                                              ?.isBefore(DateTime.now()) ==
+                                          true)
+                              ? const SizedBox.shrink()
+                              : Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 20),
+                                  width: screenSize(context).width,
                                   color: AppColors.plainWhite,
-                                ),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Card(
-                                        elevation: 4,
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ),
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                              Radius.circular(15),
-                                            ),
-                                            color: const Color.fromARGB(
-                                                    255, 186, 221, 238)
-                                                .withOpacity(0.2),
-                                          ),
-                                          width: screenSize(context).width,
-                                          child: Column(
-                                            children: [
-                                              CustomSpacer(12),
-                                              Text(
-                                                "Total Points: ",
-                                                style: AppStyles
-                                                    .regularStringStyle(
-                                                  15,
-                                                  AppColors.black,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Check if Duty time is in the future
+
+                                      _controller.myAccountData.currentShift
+                                                  ?.start ==
+                                              null
+                                          ? const SizedBox.shrink()
+                                          : RichText(
+                                              text: TextSpan(
+                                                text: (DateTime.now().isAtSameMomentAs(
+                                                                _controller
+                                                                    .myAccountData
+                                                                    .currentShift!
+                                                                    .start!) ==
+                                                            true ||
+                                                        DateTime.now().isAfter(
+                                                                _controller
+                                                                    .myAccountData
+                                                                    .currentShift!
+                                                                    .start!) ==
+                                                            true)
+                                                    ? "Shift Period: "
+                                                    : "Next Shift Period: ",
+                                                style: AppStyles.subStringStyle(
+                                                  14,
+                                                  AppColors.kPrimaryColor,
                                                 ),
+                                                children: [
+                                                  TextSpan(
+                                                    text: DateTime.now().isAfter(
+                                                                _controller
+                                                                    .myAccountData
+                                                                    .currentShift!
+                                                                    .end!) ==
+                                                            true
+                                                        ? "Unspecified"
+                                                        : _controller
+                                                                    .myAccountData
+                                                                    .currentShift
+                                                                    ?.start ==
+                                                                null
+                                                            ? "Unspecified"
+                                                            : formatPeriod(
+                                                                startDate: _controller
+                                                                    .myAccountData
+                                                                    .currentShift!
+                                                                    .start!,
+                                                                endDate: _controller
+                                                                    .myAccountData
+                                                                    .currentShift!
+                                                                    .end!,
+                                                              ),
+                                                    style: AppStyles
+                                                        .keyStringStyle(
+                                                      14,
+                                                      AppColors.kPrimaryColor,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              CustomSpacer(8),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    CustomSpacer(40),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(15),
-                                        ),
-                                        color: AppColors.lighterGray,
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          CustomSpacer(20),
-                                          Text(
-                                            "Toponyms Recorded:",
-                                            textAlign: TextAlign.center,
-                                            style: AppStyles.regularStringStyle(
-                                              16,
-                                              AppColors.kPrimaryColor,
                                             ),
-                                          ),
-                                          CustomSpacer(25),
-                                        ],
-                                      ),
-                                    )
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          )
-                        : Column(
-                            children: [
-                              CustomSpacer(40),
-                              CircularProgressIndicator(
-                                color: AppColors.kPrimaryColor,
-                              )
-                            ],
-                          ),
+                        ],
+                      ),
+                    ),
+                    CustomSpacer(5),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 2),
+                      decoration: BoxDecoration(
+                        color: AppColors.kPrimaryColor,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                      child: Column(
+                        children: [
+                          // CustomSpacer(12),
+
+                          /// Check if schedules exist,
+                          /// If exists, check if the shift and off end dates are not before today
+                          (_controller.myAccountData.offPeriod?.start == null &&
+                                      _controller.myAccountData.currentShift
+                                              ?.start ==
+                                          null) ||
+                                  (_controller.myAccountData.offPeriod?.end
+                                              ?.isBefore(DateTime.now()) ==
+                                          true &&
+                                      _controller
+                                              .myAccountData.currentShift?.end
+                                              ?.isBefore(DateTime.now()) ==
+                                          true)
+                              ? const SizedBox.shrink()
+                              : Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 20),
+                                  // margin: const EdgeInsets.only(bottom: 15),
+                                  width: screenSize(context).width,
+                                  color: AppColors.plainWhite,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Check if Duty time is in the future
+
+                                      RichText(
+                                        text: TextSpan(
+                                          text: (DateTime.now()
+                                                          .isAtSameMomentAs(
+                                                              _controller
+                                                                  .myAccountData
+                                                                  .offPeriod!
+                                                                  .start!) ==
+                                                      true ||
+                                                  DateTime.now().isAfter(
+                                                          _controller
+                                                              .myAccountData
+                                                              .offPeriod!
+                                                              .start!) ==
+                                                      true)
+                                              ? DateTime.now().isAfter(
+                                                          _controller
+                                                              .myAccountData
+                                                              .offPeriod!
+                                                              .end!) ==
+                                                      true
+                                                  ? "Last Off Period: "
+                                                  : "Off Duty Period: "
+                                              : "Next Off Period: ",
+                                          style: AppStyles.subStringStyle(
+                                            14,
+                                            AppColors.kPrimaryColor,
+                                          ),
+                                          children: [
+                                            TextSpan(
+                                              text: _controller.myAccountData
+                                                          .offPeriod?.start ==
+                                                      null
+                                                  ? "Unspecifed"
+                                                  : formatPeriod(
+                                                      startDate: _controller
+                                                          .myAccountData
+                                                          .offPeriod!
+                                                          .start!,
+                                                      endDate: _controller
+                                                          .myAccountData
+                                                          .offPeriod!
+                                                          .end!,
+                                                    ),
+                                              style: AppStyles.keyStringStyle(
+                                                14,
+                                                AppColors.kPrimaryColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              );
-            },
-          ),
-        ),
-      ),
+              ),
+            );
+          }),
     );
   }
 }

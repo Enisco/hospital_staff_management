@@ -29,6 +29,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 13),
         decoration: BoxDecoration(
           color: widget.color,
+          // border: Border.all(color: AppColors.regularGray),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(30),
             topRight: Radius.circular(30),
