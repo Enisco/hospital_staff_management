@@ -49,8 +49,7 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
   Widget build(BuildContext context) {
     return ConditionalWillPopScope(
       onWillPop: () async {
-        Provider.of<CurrentPage>(context, listen: false)
-            .setCurrentPageIndex(0);
+        Provider.of<CurrentPage>(context, listen: false).setCurrentPageIndex(0);
         context.pop();
         return false;
       },
@@ -88,18 +87,17 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
                                 ),
                                 color: Colors.grey[100],
                               ),
-                              child:
-                                  const Center(child: Text("No images yet")),
+                              child: const Center(child: Text("No images yet")),
                             )
                           : Container(
                               width: 250,
                               height: 250,
                               padding: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(15)),
-                                border: Border.all(
-                                    color: AppColors.kPrimaryColor),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(15)),
+                                border:
+                                    Border.all(color: AppColors.kPrimaryColor),
                                 color: Colors.grey[100],
                                 image: DecorationImage(
                                   image: FileImage(
@@ -175,8 +173,7 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
                       ),
                       CustomSpacer(20),
                       CustomTextfield(
-                        textEditingController:
-                            _controller.departmentController,
+                        textEditingController: _controller.departmentController,
                         labelText: "Department",
                         hintText: 'Staff\'s department',
                         textInputAction: TextInputAction.done,
@@ -261,8 +258,9 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
                       ),
                       ListTile(
                         onTap: () {
-                          log.w(_controller.selectedGender);
-                          _controller.selectedGender = GenderType.male;
+                          setState(() {
+                            _controller.selectedGender = GenderType.male;
+                          });
                           log.wtf(_controller.selectedGender);
                         },
                         contentPadding: const EdgeInsets.symmetric(
@@ -274,18 +272,18 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
                           groupValue: _controller.selectedGender,
                           onChanged: (natural) {
                             setState(() {
-                              log.w(_controller.selectedGender);
                               _controller.selectedGender = GenderType.male;
-                              log.wtf(_controller.selectedGender);
                             });
+                            log.wtf(_controller.selectedGender);
                           },
                         ),
                       ),
 
                       ListTile(
                         onTap: () {
-                          log.w(_controller.selectedGender);
-                          _controller.selectedGender = GenderType.female;
+                          setState(() {
+                            _controller.selectedGender = GenderType.female;
+                          });
                           log.wtf(_controller.selectedGender);
                         },
                         contentPadding: const EdgeInsets.symmetric(
@@ -297,7 +295,6 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
                           groupValue: _controller.selectedGender,
                           onChanged: (natural) {
                             setState(() {
-                              log.w(_controller.selectedGender);
                               _controller.selectedGender = GenderType.female;
                               log.wtf(_controller.selectedGender);
                             });
@@ -307,8 +304,9 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
 
                       ListTile(
                         onTap: () {
-                          log.w(_controller.selectedGender);
-                          _controller.selectedGender = GenderType.others;
+                          setState(() {
+                            _controller.selectedGender = GenderType.others;
+                          });
                           log.wtf(_controller.selectedGender);
                         },
                         contentPadding: const EdgeInsets.symmetric(

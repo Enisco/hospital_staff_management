@@ -181,8 +181,10 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
                                     children: [
                                       ListTile(
                                         onTap: () {
-                                          _controller.selectedShift =
-                                              ShiftsPeriod.morning;
+                                          setState(() {
+                                            _controller.selectedShift =
+                                                ShiftsPeriod.morning;
+                                          });
                                           log.wtf(_controller.selectedShift);
                                         },
                                         contentPadding:
@@ -206,8 +208,10 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
                                       ),
                                       ListTile(
                                         onTap: () {
-                                          _controller.selectedShift =
-                                              ShiftsPeriod.night;
+                                          setState(() {
+                                            _controller.selectedShift =
+                                                ShiftsPeriod.night;
+                                          });
                                           log.wtf(_controller.selectedShift);
                                         },
                                         contentPadding:
@@ -239,8 +243,10 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
                                     children: [
                                       ListTile(
                                         onTap: () {
-                                          _controller.selectedShift =
-                                              ShiftsPeriod.afternoon;
+                                          setState(() {
+                                            _controller.selectedShift =
+                                                ShiftsPeriod.afternoon;
+                                          });
                                           log.wtf(_controller.selectedShift);
                                         },
                                         contentPadding:
@@ -264,8 +270,10 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
                                       ),
                                       ListTile(
                                         onTap: () {
-                                          _controller.selectedShift =
-                                              ShiftsPeriod.off;
+                                          setState(() {
+                                            _controller.selectedShift =
+                                                ShiftsPeriod.off;
+                                          });
                                           log.wtf(_controller.selectedShift);
                                         },
                                         contentPadding:
@@ -303,7 +311,7 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
                                   SizedBox(
                                     child:
                                         _controller.selectedShift ==
-                                                    ShiftsPeriod.off
+                                                ShiftsPeriod.off
                                             ? const SizedBox.shrink()
                                             : Column(
                                                 crossAxisAlignment:
@@ -605,7 +613,7 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
                                   CustomSpacer(12),
                                   Center(
                                     child: Text(
-                                      _controller.dateOverlapsError,
+                                      _controller.dateOverlapsError ?? '',
                                       style: AppStyles
                                           .floatingHintStringStyleColored(
                                               14, AppColors.coolRed),

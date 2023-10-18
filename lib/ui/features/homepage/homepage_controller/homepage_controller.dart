@@ -23,7 +23,7 @@ class HomepageController extends GetxController {
   StaffAccountModel? myData;
   DateTime? shiftStartingDate, offStartingDay, shiftEndingDate, offEndingDay;
   bool? allDatesValid, shiftDatesValid, offDatesValid, datesDoNotOverlap;
-  String dateOverlapsError = '';
+  String? dateOverlapsError = '';
 
   ShiftsPeriod? selectedShift;
 
@@ -71,7 +71,20 @@ class HomepageController extends GetxController {
     return datesDoNotOverlap!;
   }
 
+  ShiftsPeriod mapExistingShift(String shiftName) {
+    if (shiftName.toLowerCase() == ShiftsPeriod.morning.name) {
+      return ShiftsPeriod.morning;
+    } else if (shiftName.toLowerCase() == ShiftsPeriod.afternoon.name) {
+      return ShiftsPeriod.afternoon;
+    } else if (shiftName.toLowerCase() == ShiftsPeriod.night.name) {
+      return ShiftsPeriod.night;
+    } else {
+      return ShiftsPeriod.off;
+    }
+  }
+
   syncStaffCurrentShiftSchedule(CurrentShift currentShift) {
+    selectedShift = mapExistingShift(currentShift.shift!);
     shiftStartingDate = currentShift.start;
     shiftEndingDate = currentShift.end;
     log.wtf(
@@ -81,6 +94,7 @@ class HomepageController extends GetxController {
   syncStaffOffPeriodSchedule(OffPeriod offPeriod) {
     offStartingDay = offPeriod.start;
     offEndingDay = offPeriod.end;
+    if (shiftStartingDate == null) selectedShift = ShiftsPeriod.off;
     log.wtf("Updated Staff Off Schedule: ${offStartingDay?.toIso8601String()}");
   }
 
@@ -224,54 +238,57 @@ class HomepageController extends GetxController {
     );
 
     log.wtf('Time selected: $selectedDateTime');
-
-    if (selectedDateTime != null) {
-      var startDayAndTime = selectedDateTime[0];
-      var endDayAndTime = selectedDateTime[1];
-
-      if (startDayAndTime
-              .add(const Duration(minutes: 1))
-              .isBefore(endDayAndTime)
-          ) {
-        log.wtf("startDayAndTime is before endDayAndTime");
-        allDatesValid = true;
-      } else {
-        log.w("Invalid date selected");
-        allDatesValid = false;
-      }
-      return selectedDateTime;
-    }
-    return null;
+    return selectedDateTime;
   }
 
   selectNextShiftPeriod(BuildContext context) async {
     List<DateTime>? shiftDateRange = await selectDateRange(context);
-    if (allDatesValid == true) {
-      shiftStartingDate = shiftDateRange![0];
-      shiftEndingDate = shiftDateRange[1];
-      log.wtf(
-          "shiftDate - start: $shiftStartingDate \t end: $shiftEndingDate ");
-      shiftDatesValid = true;
+
+    if (shiftDateRange != null) {
+      if (shiftDateRange[0].isBefore(shiftDateRange[1]) == true) {
+        log.wtf("startDay is before endDay");
+
+        shiftStartingDate = shiftDateRange[0];
+        shiftEndingDate = shiftDateRange[1];
+        log.wtf(
+            "shiftDate - start: $shiftStartingDate \t end: $shiftEndingDate ");
+        shiftDatesValid = true;
+        allDatesValid = true;
+      } else {
+        log.w("Invalid shift date selected");
+        shiftDatesValid = false;
+        allDatesValid = false;
+      }
+      dateOverlapsError = '';
     } else {
-      log.w("Invalid shift date selected");
-      shiftDatesValid = false;
+      // dateOverlapsError = 'Select valid dates';
+      // update();
     }
-    dateOverlapsError = '';
     update();
   }
 
   selectNextOffPeriod(BuildContext context) async {
     List<DateTime>? offDateRange = await selectDateRange(context);
-    if (allDatesValid == true) {
-      offStartingDay = offDateRange![0];
-      offEndingDay = offDateRange[1];
-      log.wtf("offDate - start: $offStartingDay \t end: $offEndingDay ");
-      offDatesValid = true;
+
+    if (offDateRange != null) {
+      if (offDateRange[0].isBefore(offDateRange[1]) == true) {
+        log.wtf("startDay is before endDay");
+
+        offStartingDay = offDateRange[0];
+        offEndingDay = offDateRange[1];
+        log.wtf("offDate - start: $offStartingDay \t end: $offEndingDay ");
+        offDatesValid = true;
+        allDatesValid = true;
+      } else {
+        log.w("Invalid off date selected");
+        offDatesValid = false;
+        allDatesValid = false;
+      }
+      dateOverlapsError = '';
     } else {
-      log.w("Invalid off date selected");
-      offDatesValid = false;
+      // dateOverlapsError = 'Select valid dates';
+      // update();
     }
-    dateOverlapsError = '';
     update();
   }
 }

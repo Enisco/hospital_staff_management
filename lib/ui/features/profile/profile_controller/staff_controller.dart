@@ -2,6 +2,7 @@
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -125,9 +126,10 @@ class CreateStaffAccountController extends GetxController {
           ]),
           () {},
           AppColors.fullBlack,
-          1000,
+          1500,
         );
-        // context.pop();
+        resetValues();
+        SystemChannels.textInput.invokeMethod('TextInput.hide');
       });
     } else {
       showCustomSnackBar(context, "Ensure all fields are filled", () {},

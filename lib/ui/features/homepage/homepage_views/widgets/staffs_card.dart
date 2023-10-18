@@ -23,7 +23,7 @@ class StaffCard extends StatelessWidget {
     required DateTime endDate,
   }) {
     String formattedDateString =
-        "${DateFormat.yMMMEd().format(startDate)} - ${DateFormat.yMMMEd().format(endDate)} ";
+        "${DateFormat.yMMMEd().format(startDate)} - ${DateFormat.yMMMEd().format(endDate)}";
     return formattedDateString;
   }
 
@@ -42,190 +42,208 @@ class StaffCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomepageController>(
-        init: HomepageController(),
-        builder: (_) {
-          return InkWell(
-            onTap: () {
-              gotoEditSchedulePage(context, staffData);
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 2),
-              decoration: BoxDecoration(
-                color: AppColors.plainWhite,
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () => gotoEditSchedulePage(context, staffData),
-                    leading: InkWell(
-                      onTap: () => showFullScreenImage(
-                        context,
-                        staffData.image ??
-                            dummyAvatarUrl(
-                              staffData.image ?? 'male',
+      init: HomepageController(),
+      builder: (_) {
+        return InkWell(
+          onTap: () {
+            gotoEditSchedulePage(context, staffData);
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 2),
+            decoration: BoxDecoration(
+              color: AppColors.plainWhite,
+            ),
+            child: Column(
+              children: [
+                ListTile(
+                  onTap: () => gotoEditSchedulePage(context, staffData),
+                  leading: InkWell(
+                    onTap: () => showFullScreenImage(
+                      context,
+                      staffData.image ??
+                          dummyAvatarUrl(
+                            staffData.image ?? 'male',
+                          ),
+                    ),
+                    child: Container(
+                      height: 45,
+                      width: 45,
+                      decoration: BoxDecoration(
+                        border:
+                            Border.all(width: 1, color: Colors.blue.shade400),
+                        shape: BoxShape.circle,
+                        color: AppColors.blueGray,
+                        image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                              staffData.image ??
+                                  dummyAvatarUrl(staffData.image ?? 'male'),
                             ),
+                            fit: BoxFit.cover),
                       ),
-                      child: Container(
-                        height: 45,
-                        width: 45,
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(width: 1, color: Colors.blue.shade400),
-                          shape: BoxShape.circle,
-                          color: AppColors.blueGray,
-                          image: DecorationImage(
-                              image: CachedNetworkImageProvider(
-                                staffData.image ??
-                                    dummyAvatarUrl(staffData.image ?? 'male'),
-                              ),
-                              fit: BoxFit.cover),
-                        ),
-                      ),
-                    ),
-                    title: Text(
-                      staffData.fullName ?? '',
-                      style:
-                          AppStyles.regularStringStyle(16, AppColors.fullBlack),
-                    ),
-                    subtitle: Text(
-                      staffData.department ?? '',
-                      style: AppStyles.hintStringStyle(13),
-                    ),
-                    trailing: onDutyOrLeave(
-                      shiftStart: staffData.currentShift?.start,
-                      shiftEnd: staffData.currentShift?.end,
-                      leaveStart: staffData.offPeriod?.start,
-                      leaveEnd: staffData.offPeriod?.end,
                     ),
                   ),
+                  title: Text(
+                    staffData.fullName ?? '',
+                    style:
+                        AppStyles.regularStringStyle(16, AppColors.fullBlack),
+                  ),
+                  subtitle: Text(
+                    staffData.department ?? '',
+                    style: AppStyles.hintStringStyle(13),
+                  ),
+                  trailing: onDutyOrLeave(
+                    shiftStart: staffData.currentShift?.start,
+                    shiftEnd: staffData.currentShift?.end,
+                    leaveStart: staffData.offPeriod?.start,
+                    leaveEnd: staffData.offPeriod?.end,
+                  ),
+                ),
 
-                  /// Check if schedules exist,
-                  /// If exists, check if the shift and off end dates are not before today
-                  staffData.offPeriod?.start == null &&
-                              staffData.currentShift?.start == null ||
-                          (staffData.offPeriod?.end?.isBefore(DateTime.now()) ==
-                                  true &&
-                              staffData.currentShift?.end
-                                      ?.isBefore(DateTime.now()) ==
-                                  true)
-                      ? const SizedBox.shrink()
-                      : Container(
-                          height: 100,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
-                          margin: const EdgeInsets.only(bottom: 15),
-                          width: screenSize(context).width,
-                          color: AppColors.kPrimaryColor,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: staffData.offPeriod?.start
-                                        ?.isBefore(DateTime.now()) ==
-                                    true
-                                ? MainAxisAlignment.center
-                                : MainAxisAlignment.spaceAround,
-                            children: [
-                              // Check if Duty time hasn't elapsed
-                              staffData.offPeriod?.start
-                                          ?.isBefore(DateTime.now()) ==
-                                      true
-                                  ? const SizedBox.shrink()
-                                  : RichText(
-                                      text: TextSpan(
-                                        text: staffData.offPeriod?.start
-                                                    ?.isAfter(DateTime.now()) ==
-                                                true
-                                            ? "Next Shift: "
-                                            : "Current shift: ",
-                                        style: AppStyles.subStringStyle(
-                                          14,
-                                          AppColors.plainWhite,
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text:
-                                                staffData.currentShift?.shift ??
-                                                    'Unspecified',
-                                            style: AppStyles.keyStringStyle(
-                                                14, AppColors.plainWhite),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                /// Check if schedules exist,
+                /// If exists, check if the shift and off end dates are not before today
+                (staffData.offPeriod?.start == null &&
+                            staffData.currentShift?.start == null) ||
+                        (staffData.offPeriod?.end?.isBefore(DateTime.now()) ==
+                                true &&
+                            staffData.currentShift?.end
+                                    ?.isBefore(DateTime.now()) ==
+                                true)
+                    ? const SizedBox.shrink()
+                    : Container(
+                        height: 100,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10),
+                        margin: const EdgeInsets.only(bottom: 15),
+                        width: screenSize(context).width,
+                        color: AppColors.kPrimaryColor,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // Check if Duty time is in the future
 
-                              // Check if Duty time is in the future
-                              staffData.offPeriod?.start
-                                          ?.isBefore(DateTime.now()) ==
-                                      true
-                                  ? const SizedBox.shrink()
-                                  : RichText(
-                                      text: TextSpan(
-                                        text: staffData.offPeriod?.start
-                                                    ?.isAfter(DateTime.now()) ==
-                                                true
-                                            ? "Next Shift Period: "
-                                            : "Shift Period: ",
-                                        style: AppStyles.subStringStyle(
-                                          14,
-                                          AppColors.plainWhite,
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text:
-                                                staffData.currentShift?.start ==
-                                                        null
-                                                    ? "Unspecified"
-                                                    : formatPeriod(
-                                                        startDate: staffData
-                                                            .currentShift!
-                                                            .start!,
-                                                        endDate: staffData
-                                                            .currentShift!.end!,
-                                                      ),
-                                            style: AppStyles.keyStringStyle(
-                                              14,
-                                              AppColors.plainWhite,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                              RichText(
-                                text: TextSpan(
-                                  text: (staffData.offPeriod?.start
-                                              ?.isBefore(DateTime.now()) ==
-                                          true)
-                                      ? "Off Duty Period: "
-                                      : "Next Off Period: ",
-                                  style: AppStyles.subStringStyle(
-                                    14,
-                                    AppColors.plainWhite,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: staffData.offPeriod?.start == null
-                                          ? "Unspecifed"
-                                          : formatPeriod(
-                                              startDate:
-                                                  staffData.offPeriod!.start!,
-                                              endDate:
-                                                  staffData.offPeriod!.end!,
-                                            ),
-                                      style: AppStyles.keyStringStyle(
+                            staffData.currentShift?.start == null
+                                ? const SizedBox.shrink()
+                                : RichText(
+                                    text: TextSpan(
+                                      text: (DateTime.now().isAtSameMomentAs(
+                                                      staffData.currentShift!
+                                                          .start!) ==
+                                                  true ||
+                                              DateTime.now().isAfter(staffData
+                                                      .currentShift!.start!) ==
+                                                  true)
+                                          ? "Current Shift: "
+                                          : "Next Shift: ",
+                                      style: AppStyles.subStringStyle(
                                         14,
                                         AppColors.plainWhite,
                                       ),
+                                      children: [
+                                        TextSpan(
+                                          text: DateTime.now().isAfter(staffData
+                                                      .currentShift!.end!) ==
+                                                  true
+                                              ? "Unspecified"
+                                              : staffData.currentShift?.start ==
+                                                      null
+                                                  ? "Unspecified"
+                                                  : staffData
+                                                      .currentShift!.shift,
+                                          style: AppStyles.keyStringStyle(
+                                            14,
+                                            AppColors.plainWhite,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
+
+                            staffData.currentShift?.start == null
+                                ? const SizedBox.shrink()
+                                : RichText(
+                                    text: TextSpan(
+                                      text: (DateTime.now().isAtSameMomentAs(
+                                                      staffData.currentShift!
+                                                          .start!) ==
+                                                  true ||
+                                              DateTime.now().isAfter(staffData
+                                                      .currentShift!.start!) ==
+                                                  true)
+                                          ? "Shift Period: "
+                                          : "Next Shift Period: ",
+                                      style: AppStyles.subStringStyle(
+                                        14,
+                                        AppColors.plainWhite,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: DateTime.now().isAfter(staffData
+                                                      .currentShift!.end!) ==
+                                                  true
+                                              ? "Unspecified"
+                                              : staffData.currentShift?.start ==
+                                                      null
+                                                  ? "Unspecified"
+                                                  : formatPeriod(
+                                                      startDate: staffData
+                                                          .currentShift!.start!,
+                                                      endDate: staffData
+                                                          .currentShift!.end!,
+                                                    ),
+                                          style: AppStyles.keyStringStyle(
+                                            14,
+                                            AppColors.plainWhite,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                            RichText(
+                              text: TextSpan(
+                                text: (DateTime.now().isAtSameMomentAs(
+                                                staffData.offPeriod!.start!) ==
+                                            true ||
+                                        DateTime.now().isAfter(
+                                                staffData.offPeriod!.start!) ==
+                                            true)
+                                    ? DateTime.now().isAfter(
+                                                staffData.offPeriod!.end!) ==
+                                            true
+                                        ? "Last Off Period: "
+                                        : "Off Duty Period: "
+                                    : "Next Off Period: ",
+                                style: AppStyles.subStringStyle(
+                                  14,
+                                  AppColors.plainWhite,
                                 ),
+                                children: [
+                                  TextSpan(
+                                    text: staffData.offPeriod?.start == null
+                                        ? "Unspecifed"
+                                        : formatPeriod(
+                                            startDate:
+                                                staffData.offPeriod!.start!,
+                                            endDate: staffData.offPeriod!.end!,
+                                          ),
+                                    style: AppStyles.keyStringStyle(
+                                      14,
+                                      AppColors.plainWhite,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                ],
-              ),
+                      ),
+              ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
 
