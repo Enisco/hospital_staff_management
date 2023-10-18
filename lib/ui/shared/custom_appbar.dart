@@ -12,9 +12,9 @@ class CustomAppbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.only(top: 20),
       width: screenSize(context).width,
-      height: 100,
+      height: 120,
       decoration: BoxDecoration(
         color: appbarColor ?? AppColors.kPrimaryColor,
         borderRadius: const BorderRadius.only(

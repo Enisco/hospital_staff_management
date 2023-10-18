@@ -42,6 +42,7 @@ class _InsightsPageViewState extends State<InsightsPageView> {
     return ConditionalWillPopScope(
       onWillPop: () async {
         Provider.of<CurrentPage>(context, listen: false).setCurrentPageIndex(0);
+        _controller.getFeeds();
         context.pop();
         return false;
       },

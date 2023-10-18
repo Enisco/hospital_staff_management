@@ -33,24 +33,6 @@ class InsightsController extends GetxController {
     update();
   }
 
-  /// Format date string to datetime format
-  // String formatToDateTime(String dateString) {
-  //   DateTime tempDate = DateFormat("EEE, MMM d, yyyy hh:mm aaa").parse(
-  //     dateString,
-  //   );
-  //   String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(tempDate);
-  //   log.d('formattedDate = $formattedDate');
-  //   return formattedDate;
-  // }
-
-  // String formatCurrentTime() {
-  //   DateTime now = DateTime.now();
-  //   String lastTime =
-  //       "${DateFormat.yMMMEd().format(now)} ${DateFormat.jm().format(DateTime.now())}";
-  //   log.d(lastTime);
-  //   return lastTime;
-  // }
-
   Future<void> refreshFeeds() async {
     loading = true;
     update();

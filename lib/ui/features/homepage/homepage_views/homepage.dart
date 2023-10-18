@@ -152,7 +152,7 @@ class _StaffHomePageState extends State<StaffHomePage> {
           appBar: PreferredSize(
             preferredSize: Size(screenSize(context).width, 60),
             child: const CustomAppbar(
-              title: "<My> Schedules",
+              title: "My Schedules",
             ),
           ),
           body: SingleChildScrollView(

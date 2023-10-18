@@ -13,7 +13,7 @@ import 'package:hospital_staff_management/ui/features/splash_screen/splash_scree
 class AppRouter {
   static final router = GoRouter(
     navigatorKey: NavigationService.navigatorKey,
-    initialLocation: '/signInView',
+    // initialLocation: '/signInView',
     routes: [
       GoRoute(
         path: '/',
@@ -26,11 +26,6 @@ class AppRouter {
         pageBuilder: (context, state) => CustomNormalTransition(
             child: const HomepageView(), key: state.pageKey),
       ),
-      // GoRoute(
-      //   path: '/editStaffSchedulePageView',
-      //   pageBuilder: (context, state) => CustomSlideTransition(
-      //       child: const EditStaffSchedulePageView(), key: state.pageKey),
-      // ),
       GoRoute(
         path: '/insightsPageView',
         pageBuilder: (context, state) => CustomNormalTransition(
