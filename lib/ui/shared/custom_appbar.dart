@@ -24,7 +24,7 @@ class CustomAppbar extends StatelessWidget {
       ),
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.only(top: 32),
+          padding: const EdgeInsets.only(top: 30),
           child: Text(
             title ?? "HSMS",
             style: AppStyles.regularStringStyle(
