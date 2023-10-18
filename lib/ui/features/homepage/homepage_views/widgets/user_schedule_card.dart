@@ -124,7 +124,7 @@ class UserScheduleCard extends StatelessWidget {
                       ),
                     ),
 
-                    CustomSpacer(15),
+                    CustomSpacer(10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: CustomCurvedContainer(
