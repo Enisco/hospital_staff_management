@@ -103,7 +103,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     reverse: false,
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: _controller.staffsData.length,
                     itemBuilder: (BuildContext context, int index) {

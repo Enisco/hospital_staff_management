@@ -150,7 +150,7 @@ class HomepageController extends GetxController {
         update();
       }
     } else {
-      dateOverlapsError = 'Reolve all dates conflicts to proceed';
+      dateOverlapsError = 'Resolve all dates conflicts to proceed';
       update();
     }
   }

@@ -73,7 +73,7 @@ class InsightsController extends GetxController {
           update();
         }
 
-        loading = false;feedData = [];
+        loading = false;
         update();
         log.wtf("returned feeds: ${insightsFeed.toJson()}");
         log.d("Going again");

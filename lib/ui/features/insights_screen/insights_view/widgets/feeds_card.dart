@@ -38,179 +38,182 @@ class _FeedsCardState extends State<FeedsCard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(top: 16, bottom: 6),
-      margin: const EdgeInsets.symmetric(
-        horizontal: 0,
-        vertical: 8,
-      ),
-      width: screenSize(context).width,
-      decoration: BoxDecoration(
-        color: AppColors.plainWhite,
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              children: [
-                SizedBox(
-                  child: CircleAvatar(
-                    backgroundColor: AppColors.blueGray,
-                    radius: 21.5,
-                    backgroundImage: CachedNetworkImageProvider(
-                      '${widget.feedData?.userProfilePicsLink}',
+    return Card(
+      elevation: 10,
+      child: Container(
+        padding: const EdgeInsets.only(top: 16, bottom: 6),
+        margin: const EdgeInsets.symmetric(
+          horizontal: 0,
+          vertical: 8,
+        ),
+        width: screenSize(context).width,
+        decoration: BoxDecoration(
+          color: AppColors.plainWhite,
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                children: [
+                  SizedBox(
+                    child: CircleAvatar(
+                      backgroundColor: AppColors.blueGray,
+                      radius: 21.5,
+                      backgroundImage: CachedNetworkImageProvider(
+                        '${widget.feedData?.userProfilePicsLink}',
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                SizedBox(
-                  height: 43,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            '${widget.feedData?.fullName}',
-                            style: AppStyles.regularStringStyle(
-                                14, AppColors.black),
-                          ),
-                        ],
-                      ),
-                      CustomSpacer(4),
-                      Row(
-                        children: [
-                          Text(
-                            formatTime('${widget.feedData?.dateCreated}'),
-                            style: AppStyles.subStringStyle(
-                              11,
-                              AppColors.opaqueDark,
+                  const SizedBox(width: 16),
+                  SizedBox(
+                    height: 43,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '${widget.feedData?.fullName}',
+                              style: AppStyles.regularStringStyle(
+                                  14, AppColors.black),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                        CustomSpacer(4),
+                        Row(
+                          children: [
+                            Text(
+                              formatTime('${widget.feedData?.dateCreated}'),
+                              style: AppStyles.subStringStyle(
+                                11,
+                                AppColors.opaqueDark,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          CustomSpacer(12),
-          SizedBox(
-            width: screenSize(context).width,
-            child: CarouselSlider(
-              options: CarouselOptions(
-                height: 380.0,
-                viewportFraction: 1.0,
-                autoPlay: false,
-                enableInfiniteScroll:
-                    widget.feedData!.feedCoverPictureLink.length > 1
-                        ? true
-                        : false,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    activePage = index;
-                  });
-                },
+                ],
               ),
-              items: widget.feedData?.feedCoverPictureLink.map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.blueGray,
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                            i,
+            ),
+            CustomSpacer(12),
+            SizedBox(
+              width: screenSize(context).width,
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  height: 380.0,
+                  viewportFraction: 1.0,
+                  autoPlay: false,
+                  enableInfiniteScroll:
+                      widget.feedData!.feedCoverPictureLink.length > 1
+                          ? true
+                          : false,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      activePage = index;
+                    });
+                  },
+                ),
+                items: widget.feedData?.feedCoverPictureLink.map((i) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.blueGray,
+                          image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                              i,
+                            ),
+                            fit: BoxFit.cover,
                           ),
-                          fit: BoxFit.cover,
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+            CustomSpacer(3),
+            widget.feedData!.feedCoverPictureLink.length > 1
+                ? SizedBox(
+                    width: 50,
+                    height: 10,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: widget.feedData?.feedCoverPictureLink.length,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 2,
+                          vertical: 0,
+                        ),
+                        child: CarouselSliderWidget(
+                          indexOn: activePage == index,
                         ),
                       ),
-                    );
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-          CustomSpacer(3),
-          widget.feedData!.feedCoverPictureLink.length > 1
-              ? SizedBox(
-                  width: 50,
-                  height: 10,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: widget.feedData?.feedCoverPictureLink.length,
-                    itemBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 2,
-                        vertical: 0,
-                      ),
-                      child: CarouselSliderWidget(
-                        indexOn: activePage == index,
-                      ),
                     ),
+                  )
+                : const SizedBox.shrink(),
+            CustomSpacer(5),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                children: [
+                  CustomAnimatedIcon(
+                    posterUsername: widget.feedData!.fullName,
                   ),
-                )
-              : const SizedBox.shrink(),
-          CustomSpacer(5),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              children: [
-                CustomAnimatedIcon(
-                  posterUsername: widget.feedData!.fullName,
-                ),
-                // const SizedBox(width: 10),
-                // Column(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   children: [
-                //     CustomSpacer(8),
-                //     Text(
-                //       '${widget.feedData?.thumbsUp}',
-                //       style: AppStyles.regularStringStyle(12, AppColors.black),
-                //     ),
-                //   ],
-                // ),
-              ],
-            ),
-          ),
-          CustomSpacer(5),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: ExpandablePanel(
-              header: RichText(
-                textScaleFactor: 1,
-                text: TextSpan(
-                  text: '${widget.feedData?.feedName}  ',
-                  style: AppStyles.regularStringStyle(15, AppColors.black),
-                ),
-              ),
-              collapsed: Text(
-                '${widget.feedData?.feedDescription}',
-                softWrap: true,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              expanded: Text(
-                '${widget.feedData?.feedDescription}',
-                softWrap: true,
-              ),
-              theme: ExpandableThemeData(
-                iconPadding: const EdgeInsets.only(top: 0),
-                iconColor: AppColors.kPrimaryColor,
-                tapBodyToCollapse: true,
-                tapBodyToExpand: true,
-                tapHeaderToExpand: true,
-                iconSize: 35,
-                headerAlignment: ExpandablePanelHeaderAlignment.center,
-                iconPlacement: ExpandablePanelIconPlacement.right,
+                  // const SizedBox(width: 10),
+                  // Column(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [
+                  //     CustomSpacer(8),
+                  //     Text(
+                  //       '${widget.feedData?.thumbsUp}',
+                  //       style: AppStyles.regularStringStyle(12, AppColors.black),
+                  //     ),
+                  //   ],
+                  // ),
+                ],
               ),
             ),
-          ),
-          CustomSpacer(10),
-        ],
+            CustomSpacer(5),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: ExpandablePanel(
+                header: RichText(
+                  textScaleFactor: 1,
+                  text: TextSpan(
+                    text: '${widget.feedData?.feedName}  ',
+                    style: AppStyles.regularStringStyle(15, AppColors.black),
+                  ),
+                ),
+                collapsed: Text(
+                  '${widget.feedData?.feedDescription}',
+                  softWrap: true,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                expanded: Text(
+                  '${widget.feedData?.feedDescription}',
+                  softWrap: true,
+                ),
+                theme: ExpandableThemeData(
+                  iconPadding: const EdgeInsets.only(top: 0),
+                  iconColor: AppColors.kPrimaryColor,
+                  tapBodyToCollapse: true,
+                  tapBodyToExpand: true,
+                  tapHeaderToExpand: true,
+                  iconSize: 35,
+                  headerAlignment: ExpandablePanelHeaderAlignment.center,
+                  iconPlacement: ExpandablePanelIconPlacement.right,
+                ),
+              ),
+            ),
+            CustomSpacer(10),
+          ],
+        ),
       ),
     );
   }

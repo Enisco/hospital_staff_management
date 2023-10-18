@@ -41,8 +41,7 @@ class _InsightsPageViewState extends State<InsightsPageView> {
   Widget build(BuildContext context) {
     return ConditionalWillPopScope(
       onWillPop: () async {
-        Provider.of<CurrentPage>(context, listen: false)
-            .setCurrentPageIndex(0);
+        Provider.of<CurrentPage>(context, listen: false).setCurrentPageIndex(0);
         context.pop();
         return false;
       },
@@ -75,9 +74,10 @@ class _InsightsPageViewState extends State<InsightsPageView> {
               onTap: (() =>
                   SystemChannels.textInput.invokeMethod('TextInput.hide')),
               child: _controller.loading == true
-                  ? const Center(
+                  ? Center(
                       child: CircularProgressIndicator(
                         strokeWidth: 3,
+                        color: AppColors.kPrimaryColor,
                       ),
                     )
                   : ListView.builder(
