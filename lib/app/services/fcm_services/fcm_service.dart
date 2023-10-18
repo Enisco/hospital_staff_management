@@ -8,7 +8,6 @@ import 'package:hospital_staff_management/app/services/navigation_service.dart';
 import 'package:hospital_staff_management/app/services/snackbar_service.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
-import 'package:hospital_staff_management/utils/extension_and_methods/string_cap_extensions.dart';
 
 var log = getLogger('FcmService');
 
@@ -75,12 +74,14 @@ class FcmService {
       "priority": "high",
       "notification": {
         "title": "HSMS",
-        "body":
-            "You have new notifications from ${notificationFrom}",
+        "body": "You have new notifications from ${notificationFrom}",
         "sound": "default",
       },
+      "data": {
+        "type": "HSMS Notif",
+      },
     };
-    
+
     log.w("yesssssss ==========");
 
     var data = await _networkHelper.postData(
