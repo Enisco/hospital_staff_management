@@ -76,7 +76,7 @@ class PushNotificationService {
       debugPrint(notificationResponse.payload);
       var payloadData = jsonDecode(notificationResponse.payload!);
 
-      NavigationService.navigatorKey.currentContext?.go('/homePage');
+      NavigationService.navigatorKey.currentContext?.go('/homepageView');
       log.wtf(">>>>>> ${payloadData["name"]}");
     }
 
