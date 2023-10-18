@@ -69,7 +69,9 @@ class PushNotificationService {
         const AndroidInitializationSettings('@mipmap/launcher_icon');
     var initializationSettingsIOS = const DarwinInitializationSettings();
     var initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
 
     // This handles routing to a secific page when there's a click event on the notification
     void onSelectNotification(NotificationResponse notificationResponse) async {

@@ -119,7 +119,7 @@ class HomepageController extends GetxController {
           log.w("Device token found");
           FcmService().sendPushNotification(
             receipientDeviceToken: updatedStaffData.deviceToken!,
-            notificationFrom: GlobalVariables.myFullName,
+            notificationFrom: "Admin",
           );
         } else {
           log.w("No device token found");

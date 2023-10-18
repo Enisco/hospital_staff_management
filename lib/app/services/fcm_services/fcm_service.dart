@@ -73,7 +73,7 @@ class FcmService {
       "priority": "high",
       "notification": {
         "title": "HSMS",
-        "body": "You have new notifications from ${GlobalVariables.myFullName}",
+        "body": "You have new notifications from Admin",
         "sound": "default",
       },
       "data": {
