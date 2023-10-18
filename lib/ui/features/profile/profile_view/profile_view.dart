@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cupertino_will_pop_scope/cupertino_will_pop_scope.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,13 +8,14 @@ import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navbar.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/page_index_class.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/staffs_card.dart';
 import 'package:hospital_staff_management/ui/features/profile/profile_controller/profile_controller.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/ui/shared/spacer.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
-import 'package:hospital_staff_management/utils/app_constants/app_key_strings.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_styles.dart';
+import 'package:hospital_staff_management/utils/extension_and_methods/full_screen_image.dart';
 import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
 import 'package:provider/provider.dart';
 
@@ -45,27 +47,23 @@ class _ProfilePageViewState extends State<ProfilePageView> {
   Widget build(BuildContext context) {
     return ConditionalWillPopScope(
       onWillPop: () async {
-        Provider.of<CurrentPage>(context, listen: false)
-            .setCurrentPageIndex(0);
+        Provider.of<CurrentPage>(context, listen: false).setCurrentPageIndex(0);
         context.pop();
         return false;
       },
       shouldAddCallback: true,
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: PreferredSize(
           preferredSize: Size(screenSize(context).width, 60),
-          child: CustomAppbar(
-            title: AppKeyStrings.profile,
-            appbarColor: AppColors.plainWhite,
-            titleColor: AppColors.kPrimaryColor,
+          child: const CustomAppbar(
+            title: "Profile",
           ),
         ),
         bottomNavigationBar: CustomNavBar(
           color: AppColors.plainWhite,
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-              horizontal: screenSize(context).width / 14, vertical: 20),
           child: GetBuilder<ProfileController>(
             init: ProfileController(),
             builder: (_) {
@@ -73,6 +71,94 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Container(
+                      height: 250,
+                      padding:
+                          const EdgeInsets.only(top: 120, left: 20, right: 20),
+                      decoration: BoxDecoration(
+                        color: AppColors.kPrimaryColor,
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(50),
+                          bottomRight: Radius.circular(50),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            height: 90,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.phone_in_talk_outlined,
+                                        color: AppColors.bronze),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      _controller.myAccountData.phone ?? '',
+                                      style: AppStyles.regularStringStyle(
+                                          14, AppColors.bronze),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      CupertinoIcons.mail,
+                                      color: AppColors.regularBlue,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      _controller.myAccountData.email ?? '',
+                                      style: AppStyles.regularStringStyle(
+                                          14, AppColors.regularBlue),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.health_and_safety_outlined,
+                                      color: AppColors.plainWhite,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      _controller.myAccountData.department ??
+                                          '',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppStyles.regularStringStyle(
+                                          14, AppColors.plainWhite),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () => showFullScreenImage(
+                              context,
+                              _controller.myAccountData.image ??
+                                  dummyAvatarUrl(
+                                    _controller.myAccountData.image ?? 'male',
+                                  ),
+                            ),
+                            child: CircleAvatar(
+                              backgroundColor: AppColors.blueGray,
+                              radius: 50,
+                              backgroundImage: CachedNetworkImageProvider(
+                                _controller.myAccountData.image ??
+                                    dummyAvatarUrl(
+                                      _controller.myAccountData.gender ??
+                                          'male',
+                                    ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Container(
                       height: 180,
                       width: 180,
@@ -190,8 +276,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                                           Text(
                                             "Toponyms Recorded:",
                                             textAlign: TextAlign.center,
-                                            style:
-                                                AppStyles.regularStringStyle(
+                                            style: AppStyles.regularStringStyle(
                                               16,
                                               AppColors.kPrimaryColor,
                                             ),

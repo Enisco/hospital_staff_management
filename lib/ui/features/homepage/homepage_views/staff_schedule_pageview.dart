@@ -74,9 +74,9 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
               child: Column(
                 children: [
                   Container(
-                    height: 230,
+                    height: 250,
                     padding:
-                        const EdgeInsets.only(top: 80, left: 20, right: 20),
+                        const EdgeInsets.only(top: 120, left: 20, right: 20),
                     decoration: BoxDecoration(
                       color: AppColors.kPrimaryColor,
                       borderRadius: const BorderRadius.only(
