@@ -57,7 +57,6 @@ class FcmService {
     if (serverKey == null) {
       return;
     }
-    log.w("Here >>>>>>>>>>>>>>");
 
     Map<String, String> header = {
       'Authorization': 'key=$serverKey',
@@ -81,8 +80,7 @@ class FcmService {
         "title": "HSMS Notification",
       },
     };
-
-    log.w("yesssssss ==========");
+    log.w("Body: ${body.toString()}");
 
     var data = await _networkHelper.postData(
       domain: _domain,
