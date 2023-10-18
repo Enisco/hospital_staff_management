@@ -57,14 +57,12 @@ class FcmService {
     if (serverKey == null) {
       return;
     }
-    log.w("Here >>>>>>>>>>>>>>");
 
     Map<String, String> header = {
       'Authorization': 'key=$serverKey',
       'Content-type': 'application/json',
       'Accept': '/',
     };
-    log.w("Okay -----------");
 
     var deviceToken = _pushMessagingNotification.deviceToken;
     GlobalVariables.myDeviceToken = deviceToken;
@@ -81,8 +79,6 @@ class FcmService {
         "type": "HSMS Notif",
       },
     };
-
-    log.w("yesssssss ==========");
 
     var data = await _networkHelper.postData(
       domain: _domain,
