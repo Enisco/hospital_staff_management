@@ -2,11 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hospital_staff_management/app/resources/app.locator.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
+import 'package:hospital_staff_management/app/services/fcm_services/push_notification_service.dart';
 import 'package:hospital_staff_management/firebase_options.dart';
 import 'package:hospital_staff_management/hosp_staff_app.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 var log = getLogger('main');
@@ -18,16 +16,6 @@ Future myBackgroundMessageHandler(RemoteMessage message) async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  String imageReceived = message.data["image"];
-  String callerNameReceived = message.data["name"];
-  String callTypeNameReceived = message.data["type"];
-
-  showInComingCall(
-    callTypeNameReceived,
-    imageReceived,
-    callerNameReceived,
   );
 
   log.w('Show notification');
@@ -44,6 +32,6 @@ void main() async {
   await _pushMessagingNotification.initialize();
   //Handle Push Notification when app is in background and when app is terminated
   FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
-  
+
   runApp(HospStaffApp());
 }
