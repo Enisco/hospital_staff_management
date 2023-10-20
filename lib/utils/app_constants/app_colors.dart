@@ -5,6 +5,8 @@ class AppColors {
     return Theme.of(context).scaffoldBackgroundColor;
   }
 
+  static Color amber = Colors.amber;
+
   static Color opaqueDark = fromHex('#7e000000');
 
   static Color lightGray = fromHex('#161a1818').withOpacity(0.05);
