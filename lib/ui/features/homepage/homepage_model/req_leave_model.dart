@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final requestLeaveModel = requestLeaveModelFromJson(jsonString);
-
 import 'dart:convert';
 
 RequestLeaveModel requestLeaveModelFromJson(String str) => RequestLeaveModel.fromJson(json.decode(str));
@@ -14,7 +10,7 @@ class RequestLeaveModel {
     final DateTime? leaveStart;
     final DateTime? leaveEnd;
     final DateTime? created;
-    final bool? seen;
+    bool? seen;
     final bool? granted;
     final String? imageUrl;
 
@@ -49,5 +45,32 @@ class RequestLeaveModel {
         "seen": seen,
         "granted": granted,
         "imageUrl": imageUrl,
+    };
+}
+
+UpdateNotificationModel updateNotificationModelFromJson(String str) => UpdateNotificationModel.fromJson(json.decode(str));
+
+String updateNotificationModelToJson(UpdateNotificationModel data) => json.encode(data.toJson());
+
+class UpdateNotificationModel {
+    bool? seen;
+
+    UpdateNotificationModel({
+        this.seen,
+    });
+
+    UpdateNotificationModel copyWith({
+        bool? seen,
+    }) => 
+        UpdateNotificationModel(
+            seen: seen ?? this.seen,
+        );
+
+    factory UpdateNotificationModel.fromJson(Map<String, dynamic> json) => UpdateNotificationModel(
+        seen: json["seen"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "seen": seen,
     };
 }

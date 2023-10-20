@@ -14,7 +14,7 @@ class CustomButton extends StatelessWidget {
 
   const CustomButton(
       {Key? key,
-      required this.styleBoolValue,
+      this.styleBoolValue,
       required this.width,
       this.height,
       this.child,
@@ -36,9 +36,7 @@ class CustomButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius ?? 28),
         ),
-        backgroundColor: styleBoolValue!
-            ? (color ?? AppColors.kPrimaryColor)
-            : AppColors.coolRed.withOpacity(0.4),
+        backgroundColor: color ?? AppColors.kPrimaryColor,
       ),
       child: child ?? const SizedBox(),
     );
