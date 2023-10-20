@@ -459,5 +459,6 @@ class HomepageController extends GetxController {
         2000,
       );
     }
+    resetValues();
   }
 }
