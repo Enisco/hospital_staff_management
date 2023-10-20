@@ -73,7 +73,7 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
-  final _controller = Get.put(HomepageController());
+  final HomepageController _controller = HomepageController.to;
 
   @override
   void initState() {
@@ -165,12 +165,13 @@ class StaffHomePage extends StatefulWidget {
 }
 
 class _StaffHomePageState extends State<StaffHomePage> {
+  final HomepageController _controller = HomepageController.to;
+
   @override
   void initState() {
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     _controller.getAllStaffsData();
-    // _controller.getMyData();
   }
 
   @override
@@ -178,7 +179,6 @@ class _StaffHomePageState extends State<StaffHomePage> {
     super.dispose();
   }
 
-  final _controller = Get.put(HomepageController());
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomepageController>(

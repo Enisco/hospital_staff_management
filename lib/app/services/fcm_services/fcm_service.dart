@@ -32,7 +32,7 @@ class FcmService {
       log.w("Error sending notifications");
       showCustomSnackBar(
         NavigationService.navigatorKey.currentContext!,
-        "Error launching calls",
+        "An error occured",
         () {},
         AppColors.fullBlack,
         2,

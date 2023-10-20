@@ -1,3 +1,4 @@
+import 'package:cupertino_will_pop_scope/cupertino_will_pop_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,8 @@ class NotificationsView extends StatefulWidget {
 }
 
 class _NotificationsViewState extends State<NotificationsView> {
-  final _controller = Get.put(HomepageController());
+  
+  final HomepageController _controller = HomepageController.to;
 
   @override
   void initState() {
@@ -30,41 +32,48 @@ class _NotificationsViewState extends State<NotificationsView> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomepageController>(
-        init: _controller,
-        builder: (_) {
-          return Scaffold(
-            backgroundColor: Colors.grey[50],
-            extendBodyBehindAppBar: false,
-            appBar: PreferredSize(
-              preferredSize: Size(screenSize(context).width, 60),
-              child: const CustomAppbar(
-                title: "Notifications",
+    return ConditionalWillPopScope(
+      onWillPop: () async {
+        _controller.getNotificationsData();
+        return false;
+      },
+      shouldAddCallback: true,
+      child: GetBuilder<HomepageController>(
+          init: _controller,
+          builder: (_) {
+            return Scaffold(
+              backgroundColor: Colors.grey[50],
+              extendBodyBehindAppBar: false,
+              appBar: PreferredSize(
+                preferredSize: Size(screenSize(context).width, 60),
+                child: const CustomAppbar(
+                  title: "Notifications",
+                ),
               ),
-            ),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    color: AppColors.lighterGray,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      reverse: false,
-                      physics: const ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: _controller.notificationsData.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return NotificationCard(
-                          notificationData:
-                              _controller.notificationsData[index],
-                        );
-                      },
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      color: AppColors.lighterGray,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        reverse: false,
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: _controller.notificationsData.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return NotificationCard(
+                            notificationData:
+                                _controller.notificationsData[index],
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        });
+            );
+          }),
+    );
   }
 }

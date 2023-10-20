@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
-import 'package:hospital_staff_management/app/services/navigation_service.dart';
 
 var log = getLogger('PushNotificationService');
 
@@ -78,8 +76,8 @@ class PushNotificationService {
       debugPrint(notificationResponse.payload);
       var payloadData = jsonDecode(notificationResponse.payload!);
 
-      NavigationService.navigatorKey.currentContext?.go('/homepageView');
-      log.wtf(">>>>>> ${payloadData["name"]}");
+      // NavigationService.navigatorKey.currentContext?.go('/homepageView');
+      log.wtf(">>>>>> ${payloadData["title"]}");
     }
 
     _flutterLocalNotificationsPlugin.initialize(initializationSettings,

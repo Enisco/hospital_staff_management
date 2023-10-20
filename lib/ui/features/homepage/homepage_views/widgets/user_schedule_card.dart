@@ -21,8 +21,8 @@ var log = getLogger('UserScheduleCard');
 
 class UserScheduleCard extends StatelessWidget {
   UserScheduleCard({super.key, required this.staffData});
-
-  final _controller = Get.put(HomepageController());
+  
+  final HomepageController _controller = HomepageController.to;
 
   final StaffAccountModel staffData;
 
@@ -50,7 +50,7 @@ class UserScheduleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomepageController>(
-      init: HomepageController(),
+      init: _controller,
       builder: (_) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -345,7 +345,7 @@ class UserScheduleCard extends StatelessWidget {
         return Dialog(
           backgroundColor: AppColors.transparent,
           child: GetBuilder<HomepageController>(
-              init: HomepageController(),
+              init: _controller,
               builder: (_) {
                 return Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),

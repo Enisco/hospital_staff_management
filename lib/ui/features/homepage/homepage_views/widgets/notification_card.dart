@@ -23,7 +23,7 @@ class NotificationCard extends StatefulWidget {
 }
 
 class _NotificationCardState extends State<NotificationCard> {
-  final _controller = Get.put(HomepageController());
+  final HomepageController _controller = HomepageController.to;
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +32,8 @@ class _NotificationCardState extends State<NotificationCard> {
         builder: (_) {
           return InkWell(
             onTap: () {
-              // setState(() {
-              //   widget.notificationData.seen = true;
-              // });
               if (widget.notificationData.seen == false) {
-                HomepageController().updateNotificationStatus(
+                _controller.updateNotificationStatus(
                   context,
                   widget.notificationData.username!,
                 );
@@ -159,10 +156,17 @@ class _NotificationCardState extends State<NotificationCard> {
                                       ),
                                     ),
                               onPressed: () {
-                                HomepageController().updateNotificationStatus(
-                                  context,
-                                  widget.notificationData.username!,
-                                );
+                                if (widget.notificationData.seen == false) {
+                                  _controller.updateNotificationStatus(
+                                    context,
+                                    widget.notificationData.username!,
+                                  );
+                                } else {
+                                  _controller.gotoUserSchedule(
+                                    context,
+                                    widget.notificationData.username!,
+                                  );
+                                }
                               },
                             ),
                           ],

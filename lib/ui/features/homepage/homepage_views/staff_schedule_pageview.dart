@@ -31,7 +31,7 @@ class EditStaffSchedulePageView extends StatefulWidget {
 }
 
 class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
-  final _controller = Get.put(HomepageController());
+  final HomepageController _controller = HomepageController.to;
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _EditStaffSchedulePageViewState extends State<EditStaffSchedulePageView> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomepageController>(
-      init: HomepageController(),
+      init: _controller,
       builder: (_) {
         return ConditionalWillPopScope(
           onWillPop: () async {

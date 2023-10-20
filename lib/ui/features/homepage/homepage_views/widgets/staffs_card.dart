@@ -15,7 +15,9 @@ import 'package:intl/intl.dart';
 var log = getLogger('StaffCard');
 
 class StaffCard extends StatelessWidget {
-  const StaffCard({super.key, required this.staffData});
+  StaffCard({super.key, required this.staffData});
+  
+  final HomepageController _controller = HomepageController.to;
 
   final StaffAccountModel staffData;
 
@@ -43,7 +45,7 @@ class StaffCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomepageController>(
-      init: HomepageController(),
+      init: _controller,
       builder: (_) {
         return InkWell(
           onTap: () {

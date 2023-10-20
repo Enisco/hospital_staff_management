@@ -25,6 +25,8 @@ var log = getLogger('HomepageController');
 enum ShiftsPeriod { morning, afternoon, night, off }
 
 class HomepageController extends GetxController {
+  static HomepageController get to => Get.find();
+
   bool doneLoading = false;
   List<StaffAccountModel> staffsData = [];
   StaffAccountModel? myData;
@@ -280,7 +282,7 @@ class HomepageController extends GetxController {
   }
 
   gotoUserSchedule(BuildContext context, String username) async {
-    updateDeviceFcmToken();
+    getNotificationsData();
     final getDataRef = FirebaseDatabase.instance.ref();
     final getDataSnapshot = await getDataRef.child('staffs/$username').get();
 
@@ -492,8 +494,6 @@ class HomepageController extends GetxController {
   }
 
   updateNotificationStatus(BuildContext context, String username) async {
-    gotoUserSchedule(context, username);
-
     UpdateNotificationModel updatedNotifData = UpdateNotificationModel(
       seen: true,
     );
@@ -512,7 +512,7 @@ class HomepageController extends GetxController {
         2000,
       );
     });
-    getNotificationsData();
+    gotoUserSchedule(context, username);
   }
 
   getNotificationsData() {
