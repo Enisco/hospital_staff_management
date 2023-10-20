@@ -332,10 +332,36 @@ class UserScheduleCard extends StatelessWidget {
     );
   }
 
-showRequestLeaveDialog() {
-  
-}
-
+  showRequestLeaveDialog(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Request Leave",
+            style: AppStyles.regularStringStyle(
+              18,
+              AppColors.fullBlack,
+            ),
+          ),
+          content: Container(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  "Request Leave",
+                  style: AppStyles.normalStringStyle(
+                    14,
+                    color: AppColors.fullBlack,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
 String dummyAvatarUrl(String gender) => gender.toLowerCase() == 'male'
