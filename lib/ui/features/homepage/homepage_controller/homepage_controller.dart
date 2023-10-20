@@ -235,7 +235,6 @@ class HomepageController extends GetxController {
         log.wtf("returned feeds: ${staffDetails.toJson()}");
         log.d("Going again");
         doneLoading = true;
-        update();
 
         /// Sort: If user,  Put user data object first,
         /// arrange others in alphabetical order.
@@ -261,8 +260,6 @@ class HomepageController extends GetxController {
   }
 
   getMyData() async {
-    doneLoading = false;
-    update();
     updateDeviceFcmToken();
     final getDataRef = FirebaseDatabase.instance.ref();
     final getDataSnapshot =
@@ -277,10 +274,8 @@ class HomepageController extends GetxController {
       myData = userAccountModel;
       GlobalVariables.myFullName = userAccountModel.fullName!;
       doneLoading = true;
-      update();
     }
     doneLoading = true;
-    update();
   }
 
   Future<List<DateTime>?> selectDateRange(BuildContext context) async {
@@ -419,6 +414,7 @@ class HomepageController extends GetxController {
         seen: false,
         granted: false,
         created: DateTime.now(),
+        imageUrl: myData?.image,
       );
 
       DatabaseReference ref =
