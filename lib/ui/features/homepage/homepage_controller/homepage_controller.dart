@@ -41,6 +41,9 @@ class HomepageController extends GetxController {
       datesDoNotOverlap;
   String? dateOverlapsError = '', leaveRequestError = '';
 
+  List<RequestLeaveModel> notificationsData = [];
+  int unseenNotificationsCount = 0;
+
   ShiftsPeriod? selectedShift;
 
   resetValues() {
@@ -211,15 +214,15 @@ class HomepageController extends GetxController {
   }
 
   getAllStaffsData() {
-    doneLoading = false;
-    update();
     updateDeviceFcmToken();
     staffsData = [];
     final allStaffDetailsRef = FirebaseDatabase.instance.ref("staffs");
 
     if (GlobalVariables.accountType.toLowerCase().contains("admin") == true) {
       log.w("Account type is admin");
+      getNotificationsData();
     } else {
+      log.w("Account type is staff");
       getMyData();
     }
 
@@ -255,7 +258,6 @@ class HomepageController extends GetxController {
     );
 
     doneLoading = true;
-    update();
   }
 
   getMyData() async {
@@ -459,5 +461,31 @@ class HomepageController extends GetxController {
         2000,
       );
     }
+  }
+
+  getNotificationsData() {
+    updateDeviceFcmToken();
+    final notifsRef = FirebaseDatabase.instance.ref("notifications");
+
+    notifsRef.onChildAdded.listen(
+      (event) {
+        RequestLeaveModel notifsDetails = requestLeaveModelFromJson(
+            jsonEncode(event.snapshot.value).toString());
+        notificationsData.add(notifsDetails);
+
+        log.wtf("returned notifications: ${notifsDetails.toJson()}");
+        log.d("Going again");
+        doneLoading = true;
+        update();
+        
+          // Sort in order of newest date and reverse
+          // notificationsData.sort((a, b) =>
+          //     a..dateTime!.compareTo(b.messages!.last.dateTime!));
+      },
+      
+      
+    );
+
+    doneLoading = true;
   }
 }
