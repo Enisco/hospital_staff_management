@@ -416,6 +416,9 @@ class HomepageController extends GetxController {
         fullname: GlobalVariables.myFullName,
         leaveStart: leaveStartingDay,
         leaveEnd: leaveEndingDay,
+        seen: false,
+        granted: false,
+        created: DateTime.now(),
       );
 
       DatabaseReference ref =
@@ -480,6 +483,7 @@ class HomepageController extends GetxController {
         doneLoading = true;
 
         // Sort in order of newest date
+
         notificationsData.sort((a, b) => a.created!.compareTo(b.created!));
         update();
       },
