@@ -6,8 +6,14 @@ import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
 class CustomAppbar extends StatelessWidget {
   final String? title;
   final Color? appbarColor, titleColor;
-  const CustomAppbar(
-      {super.key, this.title, this.appbarColor, this.titleColor});
+  final Widget? actionWidget;
+  const CustomAppbar({
+    super.key,
+    this.title,
+    this.appbarColor,
+    this.titleColor,
+    this.actionWidget,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +31,17 @@ class CustomAppbar extends StatelessWidget {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 30),
-          child: Text(
-            title ?? "HSMS",
-            style: AppStyles.regularStringStyle(
-                18, titleColor ?? AppColors.plainWhite),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(width: 80),
+              Text(
+                title ?? "HSMS",
+                style: AppStyles.regularStringStyle(
+                    18, titleColor ?? AppColors.plainWhite),
+              ),
+              actionWidget ?? SizedBox(width: 80),
+            ],
           ),
         ),
       ),

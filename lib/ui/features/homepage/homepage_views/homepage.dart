@@ -15,6 +15,7 @@ import 'package:hospital_staff_management/ui/shared/spacer.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_styles.dart';
 import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';
+import 'package:badges/badges.dart' as badges;
 
 var log = getLogger('HomepageView');
 
@@ -93,8 +94,27 @@ class _AdminHomePageState extends State<AdminHomePage> {
           backgroundColor: AppColors.lightGray,
           appBar: PreferredSize(
             preferredSize: Size(screenSize(context).width, 60),
-            child: const CustomAppbar(
+            child: CustomAppbar(
               title: "Staffs",
+              actionWidget: InkWell(
+                onTap: () {
+                  log.wtf("Go to Notifications Screen");
+                },
+                child: SizedBox(
+                  width: 80,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 25),
+                    width: 30,
+                    child: badges.Badge(
+                      badgeContent: Text('2'),
+                      child: Icon(
+                        Icons.notifications_none_outlined,
+                        color: AppColors.plainWhite,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           body: SingleChildScrollView(
