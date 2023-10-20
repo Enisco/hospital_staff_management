@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/notification_card.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/staffs_card.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
@@ -51,8 +52,8 @@ class _NotificationsViewState extends State<NotificationsView> {
                 shrinkWrap: true,
                 itemCount: _controller.staffsData.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return StaffCard(
-                    staffData: _controller.staffsData[index],
+                  return NotificationCard(
+                    notificationData: _controller.notificationsData[index],
                   );
                 },
               ),

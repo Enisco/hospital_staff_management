@@ -140,17 +140,13 @@ class _NotificationCardState extends State<NotificationCard> {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(15)),
                         color: AppColors.blueGray,
-                        // image: DecorationImage(
-                        //   fit: BoxFit.cover,
-                        //   image: CachedNetworkImageProvider(
-                        //     widget.notificationData.?.contestCoverImageData
-                        //                 ?.imageName !=
-                        //             null
-                        //         ? widget.notificationData.contest!
-                        //             .contestCoverImageData!.imageName!
-                        //         : "https://guardian.ng/wp-content/uploads/2017/12/rockconcert21-e1512298206255.jpg",
-                        //   ),
-                        // ),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: CachedNetworkImageProvider(
+                            widget.notificationData.imageUrl ??
+                                "https://guardian.ng/wp-content/uploads/2017/12/rockconcert21-e1512298206255.jpg",
+                          ),
+                        ),
                       ),
                     ),
                   ],
