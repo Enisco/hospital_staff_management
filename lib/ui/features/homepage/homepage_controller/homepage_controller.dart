@@ -274,6 +274,7 @@ class HomepageController extends GetxController {
       myData = userAccountModel;
       GlobalVariables.myFullName = userAccountModel.fullName!;
       doneLoading = true;
+      update();
     }
     doneLoading = true;
   }
