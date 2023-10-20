@@ -2,6 +2,7 @@ import 'package:cupertino_will_pop_scope/cupertino_will_pop_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/notification_card.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
@@ -16,7 +17,6 @@ class NotificationsView extends StatefulWidget {
 }
 
 class _NotificationsViewState extends State<NotificationsView> {
-  
   final HomepageController _controller = HomepageController.to;
 
   @override
@@ -35,6 +35,7 @@ class _NotificationsViewState extends State<NotificationsView> {
     return ConditionalWillPopScope(
       onWillPop: () async {
         _controller.getNotificationsData();
+        context.pop();
         return false;
       },
       shouldAddCallback: true,

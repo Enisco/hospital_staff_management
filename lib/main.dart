@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hospital_staff_management/app/resources/app.locator.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/app/services/fcm_services/push_notification_service.dart';
 import 'package:hospital_staff_management/firebase_options.dart';
 import 'package:hospital_staff_management/hosp_staff_app.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
 
 var log = getLogger('main');
 
@@ -32,6 +34,7 @@ void main() async {
   await _pushMessagingNotification.initialize();
   //Handle Push Notification when app is in background and when app is terminated
   FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+  Get.put(HomepageController());
 
   runApp(HospStaffApp());
 }

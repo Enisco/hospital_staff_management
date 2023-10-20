@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/app/resources/app.locator.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
@@ -494,9 +493,8 @@ class HomepageController extends GetxController {
   }
 
   updateNotificationStatus(BuildContext context, String username) async {
-    UpdateNotificationModel updatedNotifData = UpdateNotificationModel(
-      seen: true,
-    );
+    UpdateNotificationModel updatedNotifData =
+        UpdateNotificationModel(seen: true, created: DateTime.now());
 
     DatabaseReference ref =
         FirebaseDatabase.instance.ref('notifications/$username');
@@ -516,7 +514,9 @@ class HomepageController extends GetxController {
   }
 
   getNotificationsData() {
+    Map<String, RequestLeaveModel> requestLeaveMap = {};
     notificationsData = [];
+    unseenNotificationsCount = 0;
     final notifsRef = FirebaseDatabase.instance.ref("notifications");
 
     notifsRef.onChildAdded.listen(
@@ -533,10 +533,21 @@ class HomepageController extends GetxController {
         // Sort in order of newest date
 
         notificationsData.sort((a, b) => a.created!.compareTo(b.created!));
+
+        // Loop through the sorted list and add the most recent
+        // notification object for each username to the map
+        for (var data in notificationsData) {
+          if (!requestLeaveMap.containsKey(data.username)) {
+            requestLeaveMap[data.username!] = data;
+          }
+        }
+        notificationsData = requestLeaveMap.values.toList();
+
         update();
       },
     );
 
     doneLoading = true;
+    update();
   }
 }

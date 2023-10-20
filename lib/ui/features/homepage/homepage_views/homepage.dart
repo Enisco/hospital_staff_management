@@ -99,10 +99,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
             child: CustomAppbar(
               title: "Staffs",
               actionWidget: InkWell(
-                onTap: () {
-                  log.wtf(
-                      "Go to Notifications Screen: ${_controller.unseenNotificationsCount}");
-                  context.push("/notificationsView");
+                onTap: () async {
+                  await context.push("/notificationsView").whenComplete(() {
+                    log.wtf("Returned from Notifications Screen:");
+                    _controller.getNotificationsData();
+                  });
                 },
                 child: SizedBox(
                   width: 80,
