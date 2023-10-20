@@ -7,13 +7,16 @@ import 'package:hospital_staff_management/app/resources/app.locator.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/app/services/fcm_services/fcm_service.dart';
 import 'package:hospital_staff_management/app/services/fcm_services/push_notification_service.dart';
+import 'package:hospital_staff_management/app/services/snackbar_service.dart';
 import 'package:hospital_staff_management/ui/features/create_account/create_account_model/staff_account_model.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_model/req_leave_model.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_model/update_user_model.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 import 'package:hospital_staff_management/utils/extension_and_methods/string_cap_extensions.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
@@ -36,7 +39,7 @@ class HomepageController extends GetxController {
       shiftDatesValid,
       offDatesValid,
       datesDoNotOverlap;
-  String? dateOverlapsError = '';
+  String? dateOverlapsError = '', leaveRequestError = '';
 
   ShiftsPeriod? selectedShift;
 
@@ -51,6 +54,7 @@ class HomepageController extends GetxController {
     leaveEndingDay = null;
     dateOverlapsError = '';
     shiftDatesValid = null;
+    leaveDatesValid = null;
     offDatesValid = null;
     datesDoNotOverlap = null;
   }
@@ -213,6 +217,12 @@ class HomepageController extends GetxController {
     staffsData = [];
     final allStaffDetailsRef = FirebaseDatabase.instance.ref("staffs");
 
+    if (GlobalVariables.accountType.toLowerCase().contains("admin") == true) {
+      log.w("Account type is admin");
+    } else {
+      getMyData();
+    }
+
     allStaffDetailsRef.onChildAdded.listen(
       (event) {
         StaffAccountModel staffDetails = staffAccountModelFromJson(
@@ -263,6 +273,7 @@ class HomepageController extends GetxController {
         jsonEncode(getDataSnapshot.value).toString(),
       );
       myData = userAccountModel;
+      GlobalVariables.myFullName = userAccountModel.fullName!;
       doneLoading = true;
       update();
     }
@@ -386,10 +397,67 @@ class HomepageController extends GetxController {
       }
       dateOverlapsError = '';
     } else {
-      leaveDatesValid = false;
+      // leaveDatesValid = false;
     }
     update();
   }
 
+  sendRequestToAdmin(BuildContext context) async {
+    final pushMessagingNotification = locator<PushNotificationService>();
+    try {
+      var deviceToken = pushMessagingNotification.deviceToken;
+      GlobalVariables.myDeviceToken = deviceToken;
+      log.wtf("GlobalVariables DeviceToken: ${GlobalVariables.myDeviceToken}");
 
+      RequestLeaveModel leaveData = RequestLeaveModel(
+        username: GlobalVariables.myUsername,
+        fullname: GlobalVariables.myFullName,
+        leaveStart: leaveStartingDay,
+        leaveEnd: leaveEndingDay,
+      );
+
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref('notifications/${leaveData.username}');
+
+      await ref.update(leaveData.toJson()).then((value) async {
+        log.w("My DeviceToken Updated");
+        context.pop();
+
+        // Get Admin Device Token
+        final getDataRef = FirebaseDatabase.instance.ref();
+        final getDataSnapshot =
+            await getDataRef.child('admin001/device_token').get();
+
+        String notifMessage =
+            "You have a leave request from ${leaveData.fullname}";
+
+        if (getDataSnapshot.exists) {
+          // Send Notification to the Admin
+          log.wtf("Admin Device token: ${getDataSnapshot.value}");
+          FcmService().sendPushNotification(
+            receipientDeviceToken: getDataSnapshot.value.toString(),
+            message: notifMessage,
+          );
+        } else {}
+      }, onError: (e) {
+        log.w("Error requesting leave}");
+        showCustomSnackBar(
+          context,
+          "Error requesting leave",
+          () {},
+          AppColors.fullBlack,
+          2000,
+        );
+      });
+    } catch (e) {
+      log.w("Error requesting leave}");
+      showCustomSnackBar(
+        context,
+        "Error requesting leave",
+        () {},
+        AppColors.fullBlack,
+        2000,
+      );
+    }
+  }
 }

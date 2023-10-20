@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/ui/features/create_account/create_account_model/staff_account_model.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
@@ -18,7 +20,9 @@ import 'package:intl/intl.dart';
 var log = getLogger('UserScheduleCard');
 
 class UserScheduleCard extends StatelessWidget {
-  const UserScheduleCard({super.key, required this.staffData});
+  UserScheduleCard({super.key, required this.staffData});
+
+  final _controller = Get.put(HomepageController());
 
   final StaffAccountModel staffData;
 
@@ -298,6 +302,7 @@ class UserScheduleCard extends StatelessWidget {
                     CustomButton(
                       onPressed: () {
                         log.wtf("Requesting Leave");
+                        showRequestLeaveDialog(context);
                       },
                       styleBoolValue: true,
                       height: 35,
@@ -335,29 +340,217 @@ class UserScheduleCard extends StatelessWidget {
   showRequestLeaveDialog(BuildContext context) {
     return showDialog<void>(
       context: context,
-      barrierDismissible: true, // user must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            "Request Leave",
-            style: AppStyles.regularStringStyle(
-              18,
-              AppColors.fullBlack,
-            ),
-          ),
-          content: Container(
-            child: ListBody(
-              children: <Widget>[
-                Text(
-                  "Request Leave",
-                  style: AppStyles.normalStringStyle(
-                    14,
-                    color: AppColors.fullBlack,
+        return Dialog(
+          backgroundColor: AppColors.transparent,
+          child: GetBuilder<HomepageController>(
+              init: HomepageController(),
+              builder: (_) {
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: AppColors.plainWhite,
                   ),
-                ),
-              ],
-            ),
-          ),
+                  height: 260,
+                  width: screenSize(context).width * 0.9,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "Request Leave",
+                        style: AppStyles.regularStringStyle(
+                          18,
+                          AppColors.fullBlack,
+                        ),
+                      ),
+                      CustomSpacer(12),
+                      Text(
+                        "Select the period for which you want to request the leave.",
+                        textAlign: TextAlign.center,
+                        style: AppStyles.normalStringStyle(
+                          14,
+                          color: AppColors.darkGray,
+                        ),
+                      ),
+                      CustomSpacer(20),
+
+                      // For Leave Date Period Selection
+                      SizedBox(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: (() async {
+                                _controller.selectRequestLeavePeriod(context);
+
+                                SystemChannels.textInput
+                                    .invokeMethod('TextInput.hide');
+                              }),
+                              child: CustomCurvedContainer(
+                                borderColor:
+                                    _controller.leaveDatesValid == false
+                                        ? AppColors.coolRed
+                                        : AppColors.transparent,
+                                width: screenSize(context).width * 0.8,
+                                height: _controller.leaveStartingDay == null
+                                    ? 61
+                                    : 65,
+                                leftPadding: 13,
+                                child: _controller.leaveStartingDay == null
+                                    ? Row(
+                                        children: [
+                                          Text(
+                                            "Select Leave Period",
+                                            overflow: TextOverflow.ellipsis,
+                                            style:
+                                                AppStyles.hintStringStyle(13),
+                                          ),
+                                        ],
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: screenSize(context).width *
+                                                0.8 *
+                                                0.42,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'From:',
+                                                  style:
+                                                      AppStyles.hintStringStyle(
+                                                          13),
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      DateFormat.yMMMEd()
+                                                          .format(_controller
+                                                              .leaveStartingDay!),
+                                                      style: AppStyles
+                                                              .inputStringStyle(
+                                                                  AppColors
+                                                                      .fullBlack)
+                                                          .copyWith(
+                                                              fontSize: 14),
+                                                    ),
+                                                    CustomSpacer(8),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'To:',
+                                                style:
+                                                    AppStyles.hintStringStyle(
+                                                        13),
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    DateFormat.yMMMEd().format(
+                                                        _controller
+                                                            .leaveEndingDay!),
+                                                    style: AppStyles
+                                                            .inputStringStyle(
+                                                                AppColors
+                                                                    .fullBlack)
+                                                        .copyWith(fontSize: 14),
+                                                  ),
+                                                  CustomSpacer(8),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                              ),
+                            ),
+                            CustomSpacer(3),
+                            Center(
+                              child: Text(
+                                _controller.leaveDatesValid == false
+                                    ? "Ending date must be after the starting date"
+                                    : "",
+                                style: AppStyles.floatingHintStringStyleColored(
+                                    14, AppColors.coolRed),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      CustomSpacer(10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomButton(
+                            height: 40,
+                            styleBoolValue: true,
+                            color: AppColors.lightGray,
+                            width: screenSize(context).width * 0.3,
+                            child: Text(
+                              "Cancel",
+                              style: AppStyles.regularStringStyle(
+                                15,
+                                AppColors.coolRed,
+                              ),
+                            ),
+                            onPressed: () {
+                              context.pop();
+                              _controller.resetValues();
+                            },
+                          ),
+                          _controller.leaveStartingDay == null
+                              ? SizedBox.shrink()
+                              : SizedBox(width: 12),
+                          _controller.leaveStartingDay == null
+                              ? SizedBox.shrink()
+                              : CustomButton(
+                                  height: 40,
+                                  styleBoolValue: true,
+                                  color: AppColors.lightGray,
+                                  width: screenSize(context).width * 0.3,
+                                  child: Text(
+                                    "Request",
+                                    style: AppStyles.regularStringStyle(
+                                      15,
+                                      Colors.green.shade700,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    _controller.sendRequestToAdmin(context);
+                                  },
+                                ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }),
         );
       },
     );

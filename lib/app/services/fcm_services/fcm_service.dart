@@ -73,7 +73,7 @@ class FcmService {
       "priority": "high",
       "notification": {
         "title": "HSMS",
-        "body": message ,
+        "body": message,
         "sound": "default",
       },
       "data": {
