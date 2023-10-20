@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final requestLeaveModel = requestLeaveModelFromJson(jsonString);
+
 import 'dart:convert';
 
 RequestLeaveModel requestLeaveModelFromJson(String str) => RequestLeaveModel.fromJson(json.decode(str));
@@ -12,6 +16,7 @@ class RequestLeaveModel {
     final DateTime? created;
     final bool? seen;
     final bool? granted;
+    final String? imageUrl;
 
     RequestLeaveModel({
         this.username,
@@ -21,6 +26,7 @@ class RequestLeaveModel {
         this.created,
         this.seen,
         this.granted,
+        this.imageUrl,
     });
 
     factory RequestLeaveModel.fromJson(Map<String, dynamic> json) => RequestLeaveModel(
@@ -31,6 +37,7 @@ class RequestLeaveModel {
         created: json["created"] == null ? null : DateTime.parse(json["created"]),
         seen: json["seen"],
         granted: json["granted"],
+        imageUrl: json["imageUrl"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -41,5 +48,6 @@ class RequestLeaveModel {
         "created": created?.toIso8601String(),
         "seen": seen,
         "granted": granted,
+        "imageUrl": imageUrl,
     };
 }
