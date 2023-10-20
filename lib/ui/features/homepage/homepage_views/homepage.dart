@@ -4,6 +4,7 @@ import 'package:cupertino_will_pop_scope/cupertino_will_pop_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navbar.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
@@ -101,6 +102,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 onTap: () {
                   log.wtf(
                       "Go to Notifications Screen: ${_controller.unseenNotificationsCount}");
+                  context.push("/notificationsView");
                 },
                 child: SizedBox(
                   width: 80,

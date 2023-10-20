@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/notification_card.dart';
-import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/staffs_card.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 import 'package:hospital_staff_management/utils/screen_util/screen_util.dart';

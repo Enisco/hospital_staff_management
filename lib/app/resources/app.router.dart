@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/app/services/navigation_service.dart';
 import 'package:hospital_staff_management/ui/features/create_account/login_views/signin_user_view.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/homepage.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_views/notifications_view.dart';
 import 'package:hospital_staff_management/ui/features/insights_screen/insights_view/create_insight_view.dart';
 import 'package:hospital_staff_management/ui/features/profile/profile_view/add_staff_pageview.dart';
 import 'package:hospital_staff_management/ui/features/profile/profile_view/profile_view.dart';
@@ -24,6 +25,11 @@ class AppRouter {
         path: '/homepageView',
         pageBuilder: (context, state) => CustomNormalTransition(
             child: const HomepageView(), key: state.pageKey),
+      ),
+      GoRoute(
+        path: '/notificationsView',
+        pageBuilder: (context, state) => CustomSlideTransition(
+            child: const NotificationsView(), key: state.pageKey),
       ),
       GoRoute(
         path: '/insightsPageView',
