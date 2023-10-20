@@ -30,36 +30,41 @@ class _NotificationsViewState extends State<NotificationsView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      extendBodyBehindAppBar: false,
-      appBar: PreferredSize(
-        preferredSize: Size(screenSize(context).width, 60),
-        child: const CustomAppbar(
-          title: "Notifications",
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              color: AppColors.lighterGray,
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                reverse: false,
-                physics: const ClampingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: _controller.staffsData.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return NotificationCard(
-                    notificationData: _controller.notificationsData[index],
-                  );
-                },
+    return GetBuilder<HomepageController>(
+        init: _controller,
+        builder: (_) {
+          return Scaffold(
+            backgroundColor: Colors.grey[50],
+            extendBodyBehindAppBar: false,
+            appBar: PreferredSize(
+              preferredSize: Size(screenSize(context).width, 60),
+              child: const CustomAppbar(
+                title: "Notifications",
               ),
             ),
-          ],
-        ),
-      ),
-    );
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    color: AppColors.lighterGray,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      reverse: false,
+                      physics: const ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _controller.notificationsData.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return NotificationCard(
+                          notificationData:
+                              _controller.notificationsData[index],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

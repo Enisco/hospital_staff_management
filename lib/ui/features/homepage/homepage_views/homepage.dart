@@ -90,7 +90,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomepageController>(
-      init: HomepageController(),
+      init: _controller,
       builder: (_) {
         return Scaffold(
           backgroundColor: AppColors.lightGray,

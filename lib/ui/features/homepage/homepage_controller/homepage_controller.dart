@@ -11,8 +11,8 @@ import 'package:hospital_staff_management/app/services/snackbar_service.dart';
 import 'package:hospital_staff_management/ui/features/create_account/create_account_model/staff_account_model.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_model/req_leave_model.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_model/update_user_model.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_views/staff_schedule_pageview.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -283,6 +283,33 @@ class HomepageController extends GetxController {
     update();
   }
 
+  gotoUserSchedule(BuildContext context, String username) async {
+    updateDeviceFcmToken();
+    final getDataRef = FirebaseDatabase.instance.ref();
+    final getDataSnapshot = await getDataRef.child('staffs/$username').get();
+
+    if (getDataSnapshot.exists) {
+      log.i("User exists: ${getDataSnapshot.value}");
+
+      StaffAccountModel userData = staffAccountModelFromJson(
+        jsonEncode(getDataSnapshot.value).toString(),
+      );
+      doneLoading = true;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditStaffSchedulePageView(
+            staffData: userData,
+          ),
+        ),
+      );
+    }
+
+    doneLoading = true;
+    update();
+  }
+
   Future<List<DateTime>?> selectDateRange(BuildContext context) async {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
@@ -467,8 +494,32 @@ class HomepageController extends GetxController {
     resetValues();
   }
 
+  updateNotificationStatus(BuildContext context, String username) async {
+    gotoUserSchedule(context, username);
+
+    UpdateNotificationModel updatedNotifData = UpdateNotificationModel(
+      seen: true,
+    );
+
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref('notifications/$username');
+
+    await ref.update(updatedNotifData.toJson()).then((value) async {},
+        onError: (e) {
+      log.w("Error requesting leave}");
+      showCustomSnackBar(
+        context,
+        "Error requesting leave",
+        () {},
+        AppColors.fullBlack,
+        2000,
+      );
+    });
+    getNotificationsData();
+  }
+
   getNotificationsData() {
-    updateDeviceFcmToken();
+    notificationsData = [];
     final notifsRef = FirebaseDatabase.instance.ref("notifications");
 
     notifsRef.onChildAdded.listen(
