@@ -5,6 +5,7 @@ import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/ui/features/create_account/create_account_model/staff_account_model.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/staff_schedule_pageview.dart';
+import 'package:hospital_staff_management/ui/shared/custom_button.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/ui/shared/gray_curved_container.dart';
 import 'package:hospital_staff_management/ui/shared/spacer.dart';
@@ -69,7 +70,7 @@ class UserScheduleCard extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    CustomSpacer(12),
+                    CustomSpacer(15),
                     Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 14, vertical: 3),
@@ -293,6 +294,34 @@ class UserScheduleCard extends StatelessWidget {
                               ],
                             ),
                           ),
+
+                    CustomButton(
+                      onPressed: () {
+                        log.wtf("Requesting Leave");
+                      },
+                      styleBoolValue: true,
+                      height: 35,
+                      width: 160,
+                      color: AppColors.regularBlue,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Request Leave",
+                            style: AppStyles.regularStringStyle(
+                              15,
+                              Colors.white,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Icon(
+                            Icons.share_arrival_time_outlined,
+                            color: AppColors.plainWhite,
+                          ),
+                        ],
+                      ),
+                    ),
+                    CustomSpacer(20),
                   ],
                 ),
               ),
@@ -302,6 +331,11 @@ class UserScheduleCard extends StatelessWidget {
       },
     );
   }
+
+showRequestLeaveDialog() {
+  
+}
+
 }
 
 String dummyAvatarUrl(String gender) => gender.toLowerCase() == 'male'

@@ -25,8 +25,17 @@ class HomepageController extends GetxController {
   bool doneLoading = false;
   List<StaffAccountModel> staffsData = [];
   StaffAccountModel? myData;
-  DateTime? shiftStartingDate, offStartingDay, shiftEndingDate, offEndingDay;
-  bool? allDatesValid, shiftDatesValid, offDatesValid, datesDoNotOverlap;
+  DateTime? shiftStartingDate,
+      offStartingDay,
+      shiftEndingDate,
+      offEndingDay,
+      leaveStartingDay,
+      leaveEndingDay;
+  bool? allDatesValid,
+      leaveDatesValid,
+      shiftDatesValid,
+      offDatesValid,
+      datesDoNotOverlap;
   String? dateOverlapsError = '';
 
   ShiftsPeriod? selectedShift;
@@ -38,6 +47,8 @@ class HomepageController extends GetxController {
     shiftEndingDate = null;
     offStartingDay = null;
     offEndingDay = null;
+    leaveStartingDay = null;
+    leaveEndingDay = null;
     dateOverlapsError = '';
     shiftDatesValid = null;
     offDatesValid = null;
@@ -266,14 +277,14 @@ class HomepageController extends GetxController {
       context: context,
       startInitialDate: DateTime.now(),
       // startFirstDate: DateTime(1600).subtract(const Duration(days: 7)),
-      startFirstDate: DateTime.now().subtract(const Duration(days: 7)),
+      startFirstDate: DateTime.now().subtract(const Duration(days: 0)),
       startLastDate: DateTime.now().add(
         const Duration(days: 3652),
       ),
       endInitialDate: DateTime.now(),
 
       // endFirstDate: DateTime(1600).subtract(const Duration(days: 7)),
-      endFirstDate: DateTime.now().subtract(const Duration(days: 7)),
+      endFirstDate: DateTime.now().subtract(const Duration(days: 0)),
       endLastDate: DateTime.now().add(
         const Duration(days: 3652),
       ),
@@ -356,4 +367,29 @@ class HomepageController extends GetxController {
     }
     update();
   }
+
+  selectRequestLeavePeriod(BuildContext context) async {
+    List<DateTime>? leaveDateRange = await selectDateRange(context);
+
+    if (leaveDateRange != null) {
+      if (leaveDateRange[0].isBefore(leaveDateRange[1]) == true) {
+        log.wtf("startDay is before endDay");
+
+        leaveStartingDay = leaveDateRange[0];
+        leaveEndingDay = leaveDateRange[1];
+        log.wtf(
+            "Leave Date - start: $leaveStartingDay \t end: $leaveEndingDay ");
+        leaveDatesValid = true;
+      } else {
+        log.w("Invalid Leave date selected");
+        leaveDatesValid = false;
+      }
+      dateOverlapsError = '';
+    } else {
+      leaveDatesValid = false;
+    }
+    update();
+  }
+
+
 }
