@@ -473,18 +473,16 @@ class HomepageController extends GetxController {
         RequestLeaveModel notifsDetails = requestLeaveModelFromJson(
             jsonEncode(event.snapshot.value).toString());
         notificationsData.add(notifsDetails);
+        if (notifsDetails.seen == false) unseenNotificationsCount += 1;
 
         log.wtf("returned notifications: ${notifsDetails.toJson()}");
-        log.d("Going again");
+        log.d("$unseenNotificationsCount: Going again");
         doneLoading = true;
+
+        // Sort in order of newest date
+        notificationsData.sort((a, b) => a.created!.compareTo(b.created!));
         update();
-        
-          // Sort in order of newest date and reverse
-          // notificationsData.sort((a, b) =>
-          //     a..dateTime!.compareTo(b.messages!.last.dateTime!));
       },
-      
-      
     );
 
     doneLoading = true;

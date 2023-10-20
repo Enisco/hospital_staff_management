@@ -100,9 +100,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
               title: "Staffs",
               actionWidget: InkWell(
                 onTap: () {
-                  setState(() {
-                    unreadNotifs = unreadNotifs == 0 ? 1 : 0;
-                  });
+                  // setState(() {
+                  //   unreadNotifs = unreadNotifs == 0 ? 1 : 0;
+                  // });
                   log.wtf("Go to Notifications Screen: $unreadNotifs");
                 },
                 child: SizedBox(
@@ -112,7 +112,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     width: 30,
                     child: badges.Badge(
                       badgeContent: Text('2'),
-                      showBadge: unreadNotifs > 0 ? true : false,
+                      showBadge: _controller.unseenNotificationsCount > 0
+                          ? true
+                          : false,
                       child: Icon(
                         Icons.notifications_none_outlined,
                         color: AppColors.plainWhite,
