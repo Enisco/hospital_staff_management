@@ -331,6 +331,11 @@ class UserScheduleCard extends StatelessWidget {
       },
     );
   }
+
+showRequestLeaveDialog() {
+  
+}
+
 }
 
 String dummyAvatarUrl(String gender) => gender.toLowerCase() == 'male'
