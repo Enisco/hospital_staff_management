@@ -14,13 +14,13 @@ var log = getLogger('FcmService');
 class FcmService {
   Future sendPushNotification({
     required String receipientDeviceToken,
-    required String notificationFrom,
+    required String message,
   }) async {
     try {
       log.w("Attempting to send notification");
       var data = await _sendIndiePushNotification(
         receipientDeviceToken: receipientDeviceToken,
-        notificationFrom: notificationFrom,
+        message: message,
       );
       log.wtf("sendIndiePushNotification resp: ${data.toString()}");
       PushNotificationModel pushNotificationModel =
@@ -50,7 +50,7 @@ class FcmService {
   // Method to send push notification
   Future _sendIndiePushNotification({
     required String receipientDeviceToken,
-    required String notificationFrom,
+    required String message,
   }) async {
     var serverKey = await getFcmServerKey();
     log.wtf("serverKey resp: $serverKey");
@@ -73,7 +73,7 @@ class FcmService {
       "priority": "high",
       "notification": {
         "title": "HSMS",
-        "body": "You have new notifications from Admin",
+        "body": message ,
         "sound": "default",
       },
       "data": {

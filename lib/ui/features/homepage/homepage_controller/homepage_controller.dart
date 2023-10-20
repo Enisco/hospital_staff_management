@@ -119,7 +119,7 @@ class HomepageController extends GetxController {
           log.w("Device token found");
           FcmService().sendPushNotification(
             receipientDeviceToken: updatedStaffData.deviceToken!,
-            notificationFrom: "Admin",
+            message: "You have a new notification from the Admin",
           );
         } else {
           log.w("No device token found");
@@ -216,7 +216,6 @@ class HomepageController extends GetxController {
         /// Sort: If user,  Put user data object first,
         /// arrange others in alphabetical order.
 
-        // if (GlobalVariables.accountType.contains("admin") == false) {
         log.wtf("Sorting list now");
         staffsData.sort((a, b) {
           if (a.username == GlobalVariables.myUsername &&
@@ -231,7 +230,6 @@ class HomepageController extends GetxController {
           }
         });
         log.wtf(staffsData.first);
-        // }
       },
     );
 

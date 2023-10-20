@@ -72,6 +72,8 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
+  int unreadNotifs = 1;
+
   @override
   void initState() {
     super.initState();
@@ -98,7 +100,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
               title: "Staffs",
               actionWidget: InkWell(
                 onTap: () {
-                  log.wtf("Go to Notifications Screen");
+                  setState(() {
+                    unreadNotifs = unreadNotifs == 0 ? 1 : 0;
+                  });
+                  log.wtf("Go to Notifications Screen: $unreadNotifs");
                 },
                 child: SizedBox(
                   width: 80,
@@ -107,6 +112,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     width: 30,
                     child: badges.Badge(
                       badgeContent: Text('2'),
+                      showBadge: unreadNotifs > 0 ? true : false,
                       child: Icon(
                         Icons.notifications_none_outlined,
                         color: AppColors.plainWhite,
