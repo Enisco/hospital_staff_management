@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:hospital_staff_management/ui/features/create_account/create_account_model/staff_account_model.dart';
+import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/utils/extension_and_methods/string_cap_extensions.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
@@ -129,6 +130,8 @@ class CreateStaffAccountController extends GetxController {
           1500,
         );
         resetValues();
+        GlobalVariables.newStaffAdded = true;
+
         SystemChannels.textInput.invokeMethod('TextInput.hide');
       });
     } else {

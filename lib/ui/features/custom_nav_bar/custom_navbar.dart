@@ -2,8 +2,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/page_index_class.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
 import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_key_strings.dart';
@@ -49,6 +51,13 @@ class _CustomNavBarState extends State<CustomNavBar> {
                   context.canPop() ? context.pop() : () {};
                 } else {
                   print('You are already in homepage');
+                }
+
+                if (GlobalVariables.newStaffAdded == true) {
+                  Future.delayed(Duration(milliseconds: 500)).then((value) {
+                    Get.find<HomepageController>().updateScreenValues();
+                  });
+                  GlobalVariables.newStaffAdded = false;
                 }
               },
               child: Container(

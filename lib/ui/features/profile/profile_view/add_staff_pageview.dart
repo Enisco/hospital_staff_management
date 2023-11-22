@@ -6,10 +6,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navbar.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/page_index_class.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
 import 'package:hospital_staff_management/ui/features/profile/profile_controller/staff_controller.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
 import 'package:hospital_staff_management/ui/shared/custom_button.dart';
 import 'package:hospital_staff_management/ui/shared/custom_textfield_.dart';
+import 'package:hospital_staff_management/ui/shared/global_variables.dart';
 import 'package:hospital_staff_management/ui/shared/gray_curved_container.dart';
 import 'package:hospital_staff_management/ui/shared/spacer.dart';
 import 'package:hospital_staff_management/utils/app_constants/app_colors.dart';
@@ -51,6 +53,12 @@ class _AddStaffPageViewState extends State<AddStaffPageView> {
       onWillPop: () async {
         Provider.of<CurrentPage>(context, listen: false).setCurrentPageIndex(0);
         context.pop();
+        if (GlobalVariables.newStaffAdded == true) {
+          Future.delayed(Duration(milliseconds: 500)).then((value) {
+            Get.find<HomepageController>().updateScreenValues();
+          });
+          GlobalVariables.newStaffAdded = false;
+        }
         return false;
       },
       shouldAddCallback: true,

@@ -155,6 +155,12 @@ class HomepageController extends GetxController {
     update();
   }
 
+  updateScreenValues() {
+    // getAllStaffsData();
+    update();
+    log.w("Updated all values");
+  }
+
   createStaffSchedule(
     BuildContext context,
     StaffAccountModel staffData,

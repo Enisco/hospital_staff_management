@@ -111,6 +111,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     margin: EdgeInsets.symmetric(horizontal: 25),
                     width: 30,
                     child: badges.Badge(
+                      
                       badgeContent: Text(
                         _controller.unseenNotificationsCount.toString(),
                         style: TextStyle(
