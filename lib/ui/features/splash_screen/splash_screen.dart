@@ -104,26 +104,27 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
                 Center(
                   child: AnimatedBuilder(
-                      animation: animationController!,
-                      builder: (context, child) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image(
-                              image: const AssetImage('assets/images/med.jpg'),
-                              height: sizeAnimation!.value * 4,
-                              width: sizeAnimation!.value * 4,
+                    animation: animationController!,
+                    builder: (context, child) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image(
+                            image: const AssetImage('assets/images/med.jpg'),
+                            height: sizeAnimation!.value * 4,
+                            width: sizeAnimation!.value * 4,
+                          ),
+                          CustomSpacer(screenSize(context).height / 100),
+                          Text(
+                            "HSMS",
+                            style: AppStyles.defaultKeyStringStyle(
+                              sizeAnimation!.value * 0.75,
                             ),
-                            CustomSpacer(screenSize(context).height / 100),
-                            Text(
-                              "HSMS",
-                              style: AppStyles.defaultKeyStringStyle(
-                                sizeAnimation!.value * 0.75,
-                              ),
-                            ),
-                          ],
-                        );
-                      }),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
                 Text(
                   AppSubStrings.yearFUTA,

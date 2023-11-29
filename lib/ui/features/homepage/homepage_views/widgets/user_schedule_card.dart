@@ -353,7 +353,7 @@ class UserScheduleCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25),
                     color: AppColors.plainWhite,
                   ),
-                  height: 260,
+                  height: 280,
                   width: screenSize(context).width * 0.9,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,

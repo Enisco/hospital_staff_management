@@ -183,7 +183,7 @@ class InsightsController extends GetxController {
 
         /// Map data
         InsightsFeedModel insightsData = InsightsFeedModel(
-          fullName: myAccountData.fullName ?? GlobalVariables.myUsername,
+          fullName: myAccountData.fullName ?? GlobalVariables.myFullName,
           thumbsUp: 0,
           feedCoverPictureLink: downloadUrls,
           feedName: insightsTitleController.text.trim(),

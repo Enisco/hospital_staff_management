@@ -51,7 +51,6 @@ class AppRouter {
         pageBuilder: (context, state) => CustomSlideTransition(
             child: const AddStaffPageView(), key: state.pageKey),
       ),
-      //
       GoRoute(
         path: '/signInView',
         builder: (context, state) => SignInView(),

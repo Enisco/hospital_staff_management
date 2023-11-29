@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hospital_staff_management/app/resources/app.logger.dart';
 import 'package:hospital_staff_management/ui/features/custom_nav_bar/custom_navbar.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_controller/homepage_controller.dart';
+import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/co_staff_card.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/staffs_card.dart';
 import 'package:hospital_staff_management/ui/features/homepage/homepage_views/widgets/user_schedule_card.dart';
 import 'package:hospital_staff_management/ui/shared/custom_appbar.dart';
@@ -111,7 +112,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     margin: EdgeInsets.symmetric(horizontal: 25),
                     width: 30,
                     child: badges.Badge(
-                      
                       badgeContent: Text(
                         _controller.unseenNotificationsCount.toString(),
                         style: TextStyle(
@@ -225,7 +225,7 @@ class _StaffHomePageState extends State<StaffHomePage> {
                           shrinkWrap: true,
                           itemCount: _controller.staffsData.length - 1,
                           itemBuilder: (BuildContext context, int index) {
-                            return StaffCard(
+                            return CoStaffCard(
                               staffData: _controller.staffsData[index + 1],
                             );
                           },
